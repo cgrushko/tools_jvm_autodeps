@@ -1,0 +1,42 @@
+// Copyright 2018 The Jadep Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+// Types of tokens produced by a tokenizer.
+enum TokenType {
+  // EOI marks an end-of-input.
+  EOI = 0;
+
+  // ERROR_TOKEN is produced for unrecognized parts of the input.
+  ERROR_TOKEN = 1;
+
+  // Common classes of tokens.
+  KEYWORD = 2;
+  STRING_LITERAL = 3;
+  COMMENT = 4;
+  IDENTIFIER = 5;
+  NUMERIC_LITERAL = 6;
+
+  // Various language-specific extensions.
+  MACRO = 7;       // For C++
+  CLASS_NAME = 8;  // For Java
+  CONST_NAME = 9;  // For Java
+  JAVADOC = 10;    // For JavaDoc-like comments (Java and JavaScript).
+  JAVADOC_TAG = 11;
+  TASK_TAG = 12;  // For TODOs in comments
+  ESCAPE_SEQUENCE = 13;
+
+  PUNCTUATION = 22;
+};

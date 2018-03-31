@@ -1,0 +1,90 @@
+// Copyright 2018 The Jadep Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+package java.com.google.devtools.javatools.jade.pkgloader.services;
+
+// Get the same class names in -redacted- and Bazel.
+option java_package = "com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services";
+
+import "java/com/google/devtools/javatools/jade/pkgloader/messages_proto/messages.proto";
+
+message LoaderRequest {
+  // workspace_dir is a path to a directory that contains a project's WORKSPACE
+  // file.
+  optional string workspace_dir = 1;
+
+  // install_base is the path to the Bazel's install dir. It can be obtained by
+  // `bazel info install_base`.
+  // This field is necessary when loading Bazel workspaces.
+  // On -redacted- workspaces, set it to "/" (or leave it unset to use the default).
+  optional string install_base = 4 [default = "/"];
+
+  // install_base is the path to the Bazel's output dir. It can be obtained by
+  // `bazel info output_base`.
+  // This field is necessary when loading Bazel workspaces.
+  // On -redacted- workspaces, set it to "/" (or leave it unset to use the default).
+  optional string output_base = 5 [default = "/"];
+
+  // E.g., "java/com/Foo".
+  repeated string packages = 2;
+
+  // E.g., "java_library", "java_test", etc.
+  // If empty, will serialize all rule kinds.
+  // Use this filter to reduce unnecessary work and get faster responses.
+  repeated string rule_kinds_to_serialize = 3;
+}
+
+// Response from the 'Load' RPC.
+// For each requested package in LoaderRequest, we return the list of rule
+// labels defined in it.
+// Packages that failed to load (e.g., because they don't exist) are silently
+// ignored.
+message LoaderResponse {
+  // keys = package name
+  // values = labels of rules in that package.
+  map<string, java.com.google.devtools.javatools.jade.pkgloader.messages.Pkg>
+      pkgs = 1;
+}
+
+service PackageLoader {
+  // `pkgloader` allows clients to load Bazel packages without calling Bazel.
+  rpc Load(LoaderRequest) returns (LoaderResponse) {
+    
+    
+  }
+}
+
+message Empty {}
+
+message VersionResponse {
+  optional string version = 1;
+}
+
+// VersionManagement is used by Jade to restart old PackageLoader services.
+// It should only be implemented in a server that runs locally on the user's
+// workstation.
+service VersionManagement {
+  // Version returns the version of the server.
+  // The version is set by a command-line flag when starting the server.
+  rpc Version(Empty) returns (VersionResponse) {
+  }
+
+  // Shutdown immediately shuts down the server.
+  // Outstanding requests are dropped.
+  // Callers should expect an RPC error with code Unavailable.
+  rpc Shutdown(Empty) returns (Empty) {
+  }
+}

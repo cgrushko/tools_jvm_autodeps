@@ -1,0 +1,78 @@
+// Copyright 2018 The Jadep Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+package java.com.google.devtools.javatools.jade.pkgloader.messages;
+
+// Get the same class names in -redacted- and Bazel.
+option java_package = "com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.messages";
+
+message Pkg {
+  // keys = file names, defined in this Bazel package.
+  // values = name of rule that defined that file name.
+  // e.g., "libGrokRpcCacheKeyProvider.jar" -> "GrokRpcCacheKeyProvider" (for
+  // generated target) e.g., "StringUtilitiesTest.java" -> "" (for source file)
+  map<string, string> files = 1;
+
+  // keys = rule names, e.g., "BUILDFileNameHacksTest"
+  // values = rule data.
+  map<string, Rule> rules = 2;
+
+  // keys = package_group names, e.g. "base_implementation"
+  // values = package group data.
+  map<string, PackageGroup> package_groups = 3;
+
+  // The package's default_visibility attribute.
+  repeated string default_visibility = 4;
+}
+
+message Rule {
+  // E.g., "java_test"
+  optional string kind = 1;
+
+  // E.g., "javatests/com/google/devtools/javatools/jade/BUILD:294:10"
+  optional string position = 2;
+
+  // keys = attribute name, e.g. "deps"
+  // values = attribute contents
+  map<string, Attribute> attributes = 3;
+}
+
+message PackageGroup {
+  // See
+  // https://docs.bazel.build/versions/master/be/functions.html#package_group.packages
+  repeated string package_specs = 1;
+
+  // See
+  // https://docs.bazel.build/versions/master/be/functions.html#package_group.includes
+  repeated string includes = 2;
+}
+
+message Attribute {
+  oneof value {
+    string s = 1;
+    Strings list_of_strings = 2;
+    bool b = 3;
+    int32 i = 4;
+
+    // When set, this value means that the attribute exists but we don't support
+    // representing it here. For example, 'deps = select(...)' will be returned
+    // as unknown.
+    // The value itself doesn't matter.
+    bool unknown = 5;
+  }
+}
+
+message Strings { repeated string str = 1; }

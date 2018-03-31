@@ -1,0 +1,32 @@
+${template onAfterShift-}
+${call base-}
+			if p.IncludeAllTokens {
+				n := Token(p.next.symbol)
+				switch {
+				case n >= keywordStart && n < keywordEnd:
+					p.listener(node.Keyword, p.next.offset, p.next.endoffset)
+				case n >= punctuationStart && n < punctuationEnd:
+					p.listener(node.Punctuation, p.next.offset, p.next.endoffset)
+				}
+			}
+${end}
+
+${template stateVars}
+	IncludeAllTokens bool
+${end}
+${template initStateVars}
+	p.IncludeAllTokens = false
+${end}
+
+${template parserAction($)-}
+${if customRanges()-}
+${foreach range in customRanges()-}
+		p.listener(${range.rangeType()}, ${range.first().offset}, ${range.last().endoffset})
+${end-}
+${end-}
+${if codeTemplate()-}
+${eval codeTemplate()}
+${else if context.opts.genast && context->go_ast.astcode(self)-}
+${eval context->go_ast.astcode(self), '#[generated action for ' + self + ']'}
+${end-}
+${end}

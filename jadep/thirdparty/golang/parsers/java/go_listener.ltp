@@ -1,0 +1,57 @@
+${template listener-}
+package ${self->go.package()}
+
+type Listener func(t ${self->go_listener.nodeTypeRef()}, offset, endoffset int)
+
+const (
+${foreach rangeType in syntax.rangeTypes-}
+	${rangeType->asRangeTypeName()} = ${rangeType->nodeTypeValueRef()}
+${end-}
+${foreach name in opts.extraTypes-}
+	${name} = ${name->nodeTypeValueRef()}
+${end-}
+${foreach name in opts.reportTokens.collect(tok|tok->go_token.tokenNodeName())-}
+	${name->asRangeTypeName()} = ${name->nodeTypeValueRef()}
+${end-}
+)
+
+${call allTypes-}
+${call categories-}
+${call rules-}
+${end}
+
+${template allTypes-}
+var AllTypes = [...]node.TypeDescriptor{
+${foreach rangeType in syntax.rangeTypes-}
+	{${rangeType->nodeTypeValueRef()}, "${rangeType->asRangeTypeName()->withLangPrefix()}"},
+${end-}
+${foreach name in opts.extraTypes-}
+	{${name->nodeTypeValueRef()}, "${name->withLangPrefix()}"},
+${end-}
+${foreach name in opts.reportTokens.select(it|it.nameText != 'invalid_token')
+                                   .collect(tok|tok->go_token.tokenNodeName())-}
+	{${name->nodeTypeValueRef()}, "${name->asRangeTypeName()->withLangPrefix()}"},
+${end-}
+}
+
+${end}
+
+${template rules-}
+var rule${self->nodeType()} = [...]${self->nodeTypeRef()}{
+${foreach rule in syntax.rules-}
+	${v = rule.rangeType(), v == '' || v == 'File' ? 0 : v->nodeTypeValueRef()}, // ${rule}
+${end-}
+}
+
+${end}
+
+${query nodeTypeRef() = '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".Type'}
+${query nodeTypeValueRef() =
+    '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".' + self->asRangeTypeName()->withLangPrefix()}
+
+${query langPrefix() = util.toFirstUpper(context.opts.lang)}
+
+${query withLangPrefix() =
+    ['SyntaxProblem', 'InvalidToken'].contains(self)
+        ? self
+        : self->langPrefix() + self}

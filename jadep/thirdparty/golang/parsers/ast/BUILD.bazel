@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["ast.go"],
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/ast",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//thirdparty/golang/parsers/lang:go_default_library",
+        "//thirdparty/golang/parsers/node:go_default_library",
+        "//thirdparty/golang/parsers/parsers:go_default_library",
+        "//thirdparty/golang/parsers/util/offset:go_default_library",
+    ],
+)

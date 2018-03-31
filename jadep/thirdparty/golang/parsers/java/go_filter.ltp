@@ -1,0 +1,5 @@
+${query package() = context.opts.package.replaceAll('/[^/]+$','/selector')}
+${query filterFilename() = 'selector.go'}
+
+${query oneOfRef() = '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".OneOf'}
+${query nodeSelectorTypeRef() = '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".Selector'}
