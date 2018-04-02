@@ -8,6 +8,7 @@ java_binary(
     deps = [
         ":BazelPackageLoaderFactory",
         ":Lib",
+        ":OperatingSystem",
         ":PackageLoaderFactory",
         ":Serializer",
         "//java/com/google/devtools/javatools/jade/pkgloader/services_proto:services_java_grpc",
@@ -71,4 +72,9 @@ java_library(
         "@io_bazel//src/main/java/com/google/devtools/build/lib/skyframe/packages",
         "@io_bazel//src/main/java/com/google/devtools/build/lib/vfs",
     ],
+)
+
+java_library(
+    name = "OperatingSystem",
+    srcs = ["OperatingSystem.java"],
 )
