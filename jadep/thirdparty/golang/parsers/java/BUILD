@@ -31,6 +31,7 @@ genrule(
 go_library(
     name = "go_default_library",
     srcs = [
+        "gen.go",
         "init.go",
         "lexer.go",
         "lexer_tables.go",
@@ -39,12 +40,12 @@ go_library(
         "parser_tables.go",
         "token.go",
     ],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/java",
+    importpath = "github.com/bazelbuild/tools_java_autodeps/thirdparty/golang/parsers/java",
     visibility = ["//visibility:public"],
     deps = [
         "//thirdparty/golang/parsers/lang:go_default_library",
         "//thirdparty/golang/parsers/node:go_default_library",
         "//thirdparty/golang/parsers/parsers:go_default_library",
-        "//thirdparty/golang/parsers/public/token:go_default_library",
+        "//thirdparty/golang/parsers/public:go_default_library",
     ],
 )
