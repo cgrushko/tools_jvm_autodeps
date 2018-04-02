@@ -9,6 +9,8 @@ Jadep is not an official Google product.
 
 TODO: Example on Serializer.
 
+[![demo](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf.png)](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf?autoplay=1)
+
 **Contents**
 
 -   [Java Automatic Dependencies (Jadep)](#java-automatic-dependencies-jadep)
