@@ -141,9 +141,7 @@ used to avoid repeatedly paying startup costs.
 
 ## Bugs
 
-1.  `GrpcLocalServer` can bind a Unix domain socket only on Linux. For macOS, it
-    needs to be modified to use `KQueue` instead of `Epoll`.
-2.  Jadep doesn't yet handle external repositories. The `bazel.Label` data
+1.  Jadep doesn't yet handle external repositories. The `bazel.Label` data
     structure is unaware of them, as is `GrpcLocalServer`.
 
 ## Contributing
