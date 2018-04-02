@@ -14,7 +14,6 @@
 
 package com.google.devtools.javatools.jade.pkgloader;
 
-
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.devtools.build.lib.vfs.JavaIoFileSystem;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.PackageLoaderGrpc.PackageLoaderImplBase;
@@ -25,17 +24,13 @@ import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.servi
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.VersionManagementGrpc.VersionManagementImplBase;
 import io.grpc.MethodDescriptor;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import io.grpc.ServerMethodDefinition;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.netty.NettyServerBuilder;
 import io.grpc.protobuf.services.ProtoReflectionService;
 import io.grpc.stub.StreamObserver;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerDomainSocketChannel;
-import io.netty.channel.kqueue.KQueueEventLoopGroup;
-import io.netty.channel.kqueue.KQueueServerDomainSocketChannel;
 import io.netty.channel.unix.DomainSocketAddress;
 import io.netty.util.NetUtil;
 import io.netty.util.internal.MacAddressUtil;
@@ -44,7 +39,6 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.kohsuke.args4j.CmdLineException;
@@ -122,23 +116,38 @@ public class GrpcLocalServer {
   }
 
   private void run() throws Exception {
-    final ServerBuilder<?> serverBuilder;
+    final NettyServerBuilder serverBuilder;
     if (bind.startsWith(UNIX_DOMAIN_SOCKET_PREFIX)) {
-      OperatingSystem os = OperatingSystem.detect();
-      if (os != OperatingSystem.LINUX && os != OperatingSystem.MACOS) {
-        logger.severe("binding to unix:// addresses is only supported on Linux and macOS");
-        return;
+      // Try to eagerly initialize these classes.
+      // TODO: Remove once fix is available.
+      try {
+        Class.forName(NetUtil.class.getName());
+        Class.forName(MacAddressUtil.class.getName());
+      } catch (ClassNotFoundException e) {
+        throw new IOException(e);
       }
-      serverBuilder = bindUDS(bind, os);
+      String uds = bind.substring(UNIX_DOMAIN_SOCKET_PREFIX.length());
+      logger.info("Binding to UDS: " + uds);
+      Path udsPath = Paths.get(uds);
+      Files.deleteIfExists(udsPath);
+      deleteOnExit(udsPath);
+      EpollEventLoopGroup group = newEpollEventLoopGroup();
+      serverBuilder =
+          NettyServerBuilder.forAddress(new DomainSocketAddress(uds))
+              .channelType(EpollServerDomainSocketChannel.class)
+              .workerEventLoopGroup(group)
+              .bossEventLoopGroup(group);
+
     } else {
-      final int port;
+      int port;
       try {
         port = Integer.parseInt(bind);
       } catch (NumberFormatException e) {
         logger.severe("--bind parameter is neither prefixed with unix:// nor a number");
         return;
       }
-      serverBuilder = bindTCP(port);
+      logger.info("Binding to port: " + port);
+      serverBuilder = NettyServerBuilder.forAddress(new InetSocketAddress("localhost", port));
     }
     ServerServiceDefinition versionServiceDef = new VersionManagementImpl().bindService();
     ServerServiceDefinition loaderServiceDef = new PackageLoaderImpl().bindService();
@@ -162,48 +171,6 @@ public class GrpcLocalServer {
     // If we reached here, server is no longer active. However, other threads might still be running
     // which prevents the program from exiting. We don't care about them, so explicitly exit.
     System.exit(0);
-  }
-
-  private ServerBuilder<?> bindUDS(String bind, OperatingSystem os) throws Exception {
-    // Try to eagerly initialize these classes.
-    // TODO: Remove once fix is available.
-    try {
-      Class.forName(NetUtil.class.getName());
-      Class.forName(MacAddressUtil.class.getName());
-    } catch (ClassNotFoundException e) {
-      throw new IOException(e);
-    }
-    String uds = bind.substring(UNIX_DOMAIN_SOCKET_PREFIX.length());
-    logger.info("Binding to UDS: " + uds);
-    Path udsPath = Paths.get(uds);
-    Files.deleteIfExists(udsPath);
-    deleteOnExit(udsPath);
-    ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true).build();
-
-    NettyServerBuilder result = NettyServerBuilder.forAddress(new DomainSocketAddress(uds));
-
-    EventLoopGroup group;
-    switch (os) {
-      case LINUX:
-        group = new EpollEventLoopGroup(1, threadFactory);
-        result.channelType(EpollServerDomainSocketChannel.class);
-        break;
-      case MACOS:
-        group = new KQueueEventLoopGroup(1, threadFactory);
-        result.channelType(KQueueServerDomainSocketChannel.class);
-        break;
-      default:
-        throw new IllegalStateException(
-            "binding to unix:// addresses is only supported on Linux and macOS");
-    }
-    result.workerEventLoopGroup(group).bossEventLoopGroup(group);
-
-    return result;
-  }
-
-  private ServerBuilder<?> bindTCP(int port) throws Exception {
-    logger.info("Binding to port: " + port);
-    return NettyServerBuilder.forAddress(new InetSocketAddress("localhost", port));
   }
 
   /**
@@ -243,6 +210,9 @@ public class GrpcLocalServer {
         descriptor.toBuilder().setFullMethodName(newname).build(), method.getServerCallHandler());
   }
 
+  private static EpollEventLoopGroup newEpollEventLoopGroup() {
+    return new EpollEventLoopGroup(1, new ThreadFactoryBuilder().setDaemon(true).build());
+  }
 
   private static void deleteOnExit(Path path) {
     Runtime.getRuntime()
