@@ -156,11 +156,15 @@ func TestBuildSymbolTables(t *testing.T) {
 					«2»import static assertThat;
 					«3»import static java.util.Comparator.*;
 					«4»import java.io.IOException;
-					«5»import java.util.*;`,
+					«5»import java.util.*;
+					«6»import static com.foo.Bar.CONSTANT;`,
 			want: Want{
 				"«root»": {
-					types:   map[string]string{"IOException": "«4»"},
-					members: map[string][]string{"assertThat": {"«1»", "«2»"}},
+					types: map[string]string{"IOException": "«4»"},
+					members: map[string][]string{
+						"assertThat": {"«1»", "«2»"},
+						"CONSTANT":   {"«6»"},
+					},
 				},
 			},
 		},
@@ -410,6 +414,21 @@ func TestResolve(t *testing.T) {
 									«&2»x++;
 							}
 							«&1»x = 5;
+						}
+					}`,
+			want: map[string]string{
+				"«&1»": "«1»",
+				"«&2»": "«2»",
+			},
+		},
+		{
+			desc: "symbols are resolved to import statements that imported them.",
+			source: `«1»import static com.foo.Bar.CONSTANT;
+					«2»import com.foo.Foo;
+					class A {
+						A() {
+							new «&2»Foo();
+							Object a = «&1»CONSTANT;
 						}
 					}`,
 			want: map[string]string{

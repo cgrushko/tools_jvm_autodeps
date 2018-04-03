@@ -276,7 +276,7 @@ func typeInScope(scopes []*SymbolTable, id string) ast.Node {
 func fieldInScope(scopes []*SymbolTable, id string) ast.Node {
 	for i := len(scopes) - 1; i >= 0; i-- {
 		for _, n := range scopes[i].Members[id] {
-			if n.Type() == node.JavaVarDecl {
+			if n.Type() == node.JavaVarDecl || n.Type() == node.JavaImport {
 				return n
 			}
 		}

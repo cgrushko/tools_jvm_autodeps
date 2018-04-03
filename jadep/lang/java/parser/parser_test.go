@@ -149,12 +149,16 @@ func TestClasses(t *testing.T) {
 		{
 			desc: "Return class names containing static imports",
 			source: `import static com.google.common.base.Preconditions.checkNotNull;
+					import static com.foo.Bar.CONSTANT;
 					import java.util.*;
 					import static com.google.common.collect.Iterables.*;
 					class A {
-						A() { checkNotNull(); }
+						A() {
+							Object a = CONSTANT;
+							checkNotNull();
+						}
 					}`,
-			want: []string{"com.google.common.base.Preconditions", "com.google.common.collect.Iterables"},
+			want: []string{"com.google.common.base.Preconditions", "com.foo.Bar", "com.google.common.collect.Iterables"},
 		},
 		{
 			desc: "Ignore classes when in scope of declared type parameters",
