@@ -14,16 +14,18 @@
 
 package com.google.devtools.javatools.jade.pkgloader;
 
-import static java.util.stream.Collectors.toList;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.devtools.build.lib.cmdline.LabelSyntaxException;
 import com.google.devtools.build.lib.cmdline.PackageIdentifier;
 import com.google.devtools.build.lib.packages.NoSuchPackageException;
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
 import com.google.devtools.build.lib.vfs.FileSystem;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderRequest;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderResponse;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,15 +45,21 @@ public class Lib {
             fileSystem.getPath(request.getInstallBase()),
             fileSystem.getPath(request.getOutputBase()));
 
+    HashSet<PackageIdentifier> pkgIds = new HashSet<>();
+    HashMap<PackageIdentifier, String> pkgNames = new HashMap<>();
+    for (String pkgName : request.getPackagesList()) {
+      try {
+        PackageIdentifier pkgId = PackageIdentifier.parse(pkgName).makeAbsolute();
+        pkgIds.add(pkgId);
+        pkgNames.put(pkgId, pkgName);
+      } catch (LabelSyntaxException e) {
+        // TODO: return an error to load()'s caller for propagation to the user.
+        logger.log(Level.WARNING, "Invalid package label", e);
+      }
+    }
     ImmutableMap<PackageIdentifier, PackageLoader.PackageOrException> pkgs;
     try {
-      pkgs =
-          loader.loadPackages(
-              request
-                  .getPackagesList()
-                  .stream()
-                  .map(p -> PackageIdentifier.createInMainRepo(p))
-                  .collect(toList()));
+      pkgs = loader.loadPackages(pkgIds);
     } catch (Exception e) {
       return LoaderResponse.getDefaultInstance();
     }
@@ -63,7 +71,7 @@ public class Lib {
         (pkgId, pkg) -> {
           try {
             response.putPkgs(
-                pkgId.getPackageFragment().getPathString(),
+                pkgNames.get(pkgId),
                 Serializer.serialize(pkg.get(), ruleKindsToSerialize));
           } catch (NoSuchPackageException e) {
             logger.log(Level.FINE, String.format("No such package: %s", pkgId), e);
