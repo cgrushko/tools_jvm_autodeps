@@ -65,6 +65,8 @@ public class Serializer {
   static Messages.Pkg serialize(Package pkg, Set<String> ruleKindsToSerialize) {
     Messages.Pkg.Builder result = Messages.Pkg.newBuilder();
 
+    result.setPath(pkg.getPackageDirectory().getPathString());
+
     for (Label label : pkg.getDefaultVisibility().getDeclaredLabels()) {
       result.addDefaultVisibility(label.toString());
     }

@@ -36,6 +36,10 @@ message Pkg {
 
   // The package's default_visibility attribute.
   repeated string default_visibility = 4;
+
+  // Path is the absolute path to the directory that contains this package's
+  // BUILD file.
+  optional string path = 5;
 }
 
 message Rule {

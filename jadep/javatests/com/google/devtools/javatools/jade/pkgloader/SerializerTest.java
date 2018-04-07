@@ -75,6 +75,8 @@ public class SerializerTest {
         "java_library(name = 'Zoo', srcs = ['Zoo.java'], deps = ['//other:Bla'])");
 
     Messages.Pkg pkg = loadAndSerialize("");
+    assertThat(pkg.getPath()).isEqualTo("/workspace");
+
     assertThat(pkg.getFilesMap()).containsEntry("Foo.java", "");
     assertThat(pkg.getFilesMap()).containsEntry("Bar.java", "");
     assertThat(pkg.getFilesMap()).containsEntry("Zoo.java", "");
@@ -330,5 +332,15 @@ public class SerializerTest {
     Messages.Pkg pkg = loadAndSerialize("x");
     Messages.Attribute fooVis = pkg.getRulesMap().get("Foo").getAttributesMap().get("neverlink");
     assertThat(fooVis.hasUnknown()).isTrue();
+  }
+
+  @Test
+  public void packagePaths() throws Exception {
+    workspaceRoot.getRelative("foo/bar").createDirectoryAndParents();
+    FileSystemUtils.writeLinesAs(
+        workspaceRoot.getRelative("foo/bar/BUILD"), UTF_8, "java_test(name = 'Foo')");
+
+    Messages.Pkg pkg = loadAndSerialize("foo/bar");
+    assertThat(pkg.getPath()).isEqualTo("/workspace/foo/bar");
   }
 }
