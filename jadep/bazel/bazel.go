@@ -198,6 +198,7 @@ func (r *Rule) Label() Label {
 
 // Package represents a Bazel Package.
 type Package struct {
+	Path              string
 	DefaultVisibility []Label
 	Files             map[string]string
 	Rules             map[string]*Rule // maps rule name to Rule

@@ -12,7 +12,6 @@ go_test(
         "//bazel:go_default_library",
         "//compat:go_default_library",
         "//java/com/google/devtools/javatools/jade/pkgloader/services_proto:go_default_library",
-        "//pkgloaderfakes:go_default_library",
         "@com_github_google_go_cmp//cmp:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
     ],

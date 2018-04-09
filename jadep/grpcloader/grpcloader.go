@@ -335,6 +335,7 @@ func DeserializeProto(proto *spb.LoaderResponse) map[string]*bazel.Package {
 		}
 
 		result[pkgName] = &bazel.Package{
+			Path:              *protoPkg.Path,
 			DefaultVisibility: defaultVisibility,
 			Files:             protoPkg.Files,
 			PackageGroups:     packageGroups,

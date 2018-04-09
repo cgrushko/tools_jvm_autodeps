@@ -28,7 +28,6 @@ import (
 	"context"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/compat"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloaderfakes"
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/grpc"
 
@@ -83,14 +82,24 @@ java_library(name = 'G', srcs = [':Hello.java',':Jadep.java'])`},
 			},
 			[]string{"java/c", "java/d"},
 			map[string]*bazel.Package{
-				"java/c": pkgloaderfakes.Pkg([]*bazel.Rule{
-					{"java_library", "java/c", Attrs{"name": "Foo", "srcs": []string{"Bazel.java", "Foo.java"}, "deps": []string{"G"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
-					{"java_library", "java/c", Attrs{"name": "G", "srcs": []string{"Hello.java", "Jadep.java"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
-				}),
-				"java/d": pkgloaderfakes.Pkg([]*bazel.Rule{
-					{"java_library", "java/d", Attrs{"name": "Foo", "srcs": []string{"Bazel.java", "Foo.java"}, "exports": []string{"//java/c:Foo"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
-					{"java_library", "java/d", Attrs{"name": "G", "srcs": []string{"Hello.java", "Jadep.java"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
-				}),
+				"java/c": {
+					Path:              filepath.Join(workspaceRoot, "java/c"),
+					DefaultVisibility: []bazel.Label{"//visibility:private"},
+					Files:             map[string]string{"BUILD": "", "Bazel.java": "", "Foo.java": "", "Hello.java": "", "Jadep.java": ""},
+					Rules: map[string]*bazel.Rule{
+						"Foo": {"java_library", "java/c", Attrs{"name": "Foo", "srcs": []string{"Bazel.java", "Foo.java"}, "deps": []string{"G"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
+						"G":   {"java_library", "java/c", Attrs{"name": "G", "srcs": []string{"Hello.java", "Jadep.java"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
+					},
+				},
+				"java/d": {
+					Path:              filepath.Join(workspaceRoot, "java/d"),
+					DefaultVisibility: []bazel.Label{"//visibility:private"},
+					Files:             map[string]string{"BUILD": "", "Bazel.java": "", "Foo.java": "", "Hello.java": "", "Jadep.java": ""},
+					Rules: map[string]*bazel.Rule{
+						"Foo": {"java_library", "java/d", Attrs{"name": "Foo", "srcs": []string{"Bazel.java", "Foo.java"}, "exports": []string{"//java/c:Foo"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
+						"G":   {"java_library", "java/d", Attrs{"name": "G", "srcs": []string{"Hello.java", "Jadep.java"}, "testonly": false, "visibility": []string{"//visibility:private"}}},
+					},
+				},
 			},
 		},
 		{
@@ -101,6 +110,7 @@ java_library(name = 'G', srcs = [':Hello.java',':Jadep.java'])`},
 			[]string{"x"},
 			map[string]*bazel.Package{
 				"x": {
+					Path:              filepath.Join(workspaceRoot, "x"),
 					DefaultVisibility: []bazel.Label{"//visibility:private"},
 					Files:             map[string]string{"Bar": "", "cond1": "", "cond2": "", "a.proto": "", "b.proto": "", "BUILD": ""},
 					Rules:             map[string]*bazel.Rule{"Foo": {"proto_library", "x", Attrs{"name": "Foo", "srcs": []string{"Bar", "a.proto", "b.proto"}, "testonly": false, "visibility": []string{"//visibility:private"}}}},
@@ -115,6 +125,7 @@ java_library(name = 'G', srcs = [':Hello.java',':Jadep.java'])`},
 			[]string{"x"},
 			map[string]*bazel.Package{
 				"x": {
+					Path:              filepath.Join(workspaceRoot, "x"),
 					DefaultVisibility: []bazel.Label{"//visibility:private"},
 					Files:             map[string]string{"cond1": "", "BUILD": ""},
 					Rules:             map[string]*bazel.Rule{"Foo": {"java_binary", "x", Attrs{"name": "Foo", "stamp": int32(-1), "testonly": false, "visibility": []string{"//visibility:private"}}}},
@@ -128,9 +139,12 @@ java_library(name = 'G', srcs = [':Hello.java',':Jadep.java'])`},
 			},
 			[]string{"x"},
 			map[string]*bazel.Package{
-				"x": pkgloaderfakes.Pkg([]*bazel.Rule{
-					{"proto_library", "x", Attrs{"name": "Foo", "srcs": []string(nil), "testonly": false, "visibility": []string{"//visibility:private"}}},
-				}),
+				"x": {
+					Path:              filepath.Join(workspaceRoot, "x"),
+					DefaultVisibility: []bazel.Label{"//visibility:private"},
+					Files:             map[string]string{"BUILD": ""},
+					Rules:             map[string]*bazel.Rule{"Foo": {"proto_library", "x", Attrs{"name": "Foo", "srcs": []string(nil), "testonly": false, "visibility": []string{"//visibility:private"}}}},
+				},
 			},
 		},
 	}
