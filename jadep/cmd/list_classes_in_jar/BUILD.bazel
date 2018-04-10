@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["list_classes_in_jar.go"],
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/cmd/list_classes_in_jar",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//jadeplib:go_default_library",
+        "//listclassesinjar:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "list_classes_in_jar",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
