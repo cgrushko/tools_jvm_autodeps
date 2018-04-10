@@ -48,7 +48,7 @@ func FilesToParse(arg, workingDir string, loader pkgloading.Loader) ([]string, e
 		return []string{filepath.Join(workingDir, arg)}, nil
 	}
 
-	rules, err := pkgloading.LoadRules(context.Background(), loader, []bazel.Label{label})
+	rules, _, err := pkgloading.LoadRules(context.Background(), loader, []bazel.Label{label})
 	if err != nil {
 		return nil, fmt.Errorf("Error while loading %v:\n%v", label, err)
 	}
@@ -76,7 +76,7 @@ func FilesToParse(arg, workingDir string, loader pkgloading.Loader) ([]string, e
 func RulesToFix(ctx context.Context, config jadeplib.Config, relWorkingDir, arg string, namingRules []jadeplib.NamingRule, defaultRuleKind string) ([]*bazel.Rule, error) {
 	label, err := bazel.ParseAbsoluteLabel(arg)
 	if err == nil {
-		rules, err := pkgloading.LoadRules(ctx, config.Loader, []bazel.Label{label})
+		rules, _, err := pkgloading.LoadRules(ctx, config.Loader, []bazel.Label{label})
 		if err != nil {
 			return nil, fmt.Errorf("Error loading %q:\n%v", label, err)
 		}

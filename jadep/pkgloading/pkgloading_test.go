@@ -72,12 +72,15 @@ func TestLoadRules(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		actual, err := LoadRules(context.Background(), &loadertest.StubLoader{Pkgs: tt.fixture}, tt.labelsToLoad)
+		actual, actualPkgs, err := LoadRules(context.Background(), &loadertest.StubLoader{Pkgs: tt.fixture}, tt.labelsToLoad)
 		if err != nil {
 			t.Errorf("%s: LoadRules(%v) has error %v", tt.desc, tt.labelsToLoad, err)
 		}
 		if diff := cmp.Diff(actual, tt.want); diff != "" {
-			t.Errorf("%s: LoadRules(%v) diff: (-got +want)\n%s", tt.desc, tt.labelsToLoad, diff)
+			t.Errorf("%s: LoadRules(%v) rules diff: (-got +want)\n%s", tt.desc, tt.labelsToLoad, diff)
+		}
+		if diff := cmp.Diff(actualPkgs, tt.fixture); diff != "" {
+			t.Errorf("%s: LoadRules(%v) pkgs diff: (-got +want)\n%s", tt.desc, tt.labelsToLoad, diff)
 		}
 	}
 }

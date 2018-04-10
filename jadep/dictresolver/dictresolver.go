@@ -70,7 +70,7 @@ func (r *Resolver) Resolve(ctx context.Context, classNames []jadeplib.ClassName,
 	for _, c := range candidates {
 		labels = append(labels, c...)
 	}
-	rules, err := pkgloading.LoadRules(ctx, r.loader, labels)
+	rules, _, err := pkgloading.LoadRules(ctx, r.loader, labels)
 	if err != nil {
 		return nil, err
 	}

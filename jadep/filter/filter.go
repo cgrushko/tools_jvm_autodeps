@@ -65,6 +65,7 @@ var RuleKindsToLoad = map[string]bool{
 	"android_local_test":         true,
 	"android_robolectric_test":   true,
 	"android_test":               true,
+	"bind":                       true,
 	"filegroup":                  true,
 	"java_binary":                true,
 	"java_import":                true,

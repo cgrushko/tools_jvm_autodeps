@@ -115,13 +115,13 @@ func (l *CachingLoader) Load(ctx context.Context, packages []string) (map[string
 }
 
 // LoadRules loads the packages containing labels and returns the bazel.Rules represented by them.
-func LoadRules(ctx context.Context, loader Loader, labels []bazel.Label) (map[bazel.Label]*bazel.Rule, error) {
+func LoadRules(ctx context.Context, loader Loader, labels []bazel.Label) (map[bazel.Label]*bazel.Rule, map[string]*bazel.Package, error) {
 	if len(labels) == 0 {
-		return map[bazel.Label]*bazel.Rule{}, nil
+		return map[bazel.Label]*bazel.Rule{}, nil, nil
 	}
 	pkgs, err := loader.Load(ctx, distinctPkgs(labels))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	result := make(map[bazel.Label]*bazel.Rule)
@@ -133,7 +133,7 @@ func LoadRules(ctx context.Context, loader Loader, labels []bazel.Label) (map[ba
 			}
 		}
 	}
-	return result, nil
+	return result, pkgs, nil
 }
 
 // LoadPackageGroups loads the packages containing labels and returns the bazel.Rules represented by them.

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazeldepsresolver"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/cli"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/filter"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/grpcloader"
@@ -41,6 +42,8 @@ var strContentRoots, strClassNames, strBlacklist string
 var (
 	bazelInstallBase = flag.String("bazel_install_base", "", "the value of 'bazel info install_base'")
 	bazelOutputBase  = flag.String("bazel_output_base", "", "the value of 'bazel info output_base'")
+
+	thirdpartyJvmDir = flag.String("thirdparty_jvm_dir", "thirdparty/jvm", "the directory where https://github.com/johnynek/bazel-deps placed its generated BUILD files")
 )
 
 func init() {
@@ -79,10 +82,15 @@ func main() {
 	}
 	flags.Blacklist = strings.Split(strBlacklist, ",")
 
+	workspaceDir, _, err := cli.Workspace(flags.Workspace)
+	if err != nil {
+		log.Fatalf("Can't find root of workspace: %v", err)
+	}
+
 	bazelInstallBase := *bazelInstallBase
 	bazelOutputBase := *bazelOutputBase
 	if bazelInstallBase == "" || bazelOutputBase == "" {
-		install, output, err := guessBazelBases(flags.Workspace)
+		install, output, err := guessBazelBases(workspaceDir)
 		if err != nil {
 			log.Fatalf("Can't find Bazel install and output bases. Explicitly pass --bazel_install_base and --bazel_output_base.\n%v", err)
 		}
@@ -94,17 +102,13 @@ func main() {
 		}
 	}
 
-	jadepmain.Main(customization{bazelInstallBase, bazelOutputBase}, &flags, flag.Args())
+	jadepmain.Main(customization{workspaceDir, bazelInstallBase, bazelOutputBase}, &flags, flag.Args())
 }
 
 // guessBazelBases guesses the output and install bases of the current Bazel workspace.
 // It is a horrible piece of hack and I'm ashamed of it.
-func guessBazelBases(workspaceFlag string) (installBase string, outputBase string, err error) {
-	wd, _, err := cli.Workspace(workspaceFlag)
-	if err != nil {
-		return "", "", fmt.Errorf("can't find root of workspace: %v", err)
-	}
-	bazelOut, err := os.Readlink(filepath.Join(wd, "bazel-out"))
+func guessBazelBases(workspaceDir string) (installBase string, outputBase string, err error) {
+	bazelOut, err := os.Readlink(filepath.Join(workspaceDir, "bazel-out"))
 	if err != nil {
 		return "", "", fmt.Errorf("couldn't resolve the bazel-out/ symlink: %v", err)
 	}
@@ -117,6 +121,7 @@ func guessBazelBases(workspaceFlag string) (installBase string, outputBase strin
 }
 
 type customization struct {
+	workspaceDir     string
 	bazelInstallBase string
 	bazelOutputBase  string
 }
@@ -130,7 +135,12 @@ func (c customization) NewDepsRanker(data jadepmain.DataSources) jadeplib.DepsRa
 }
 
 func (c customization) NewResolvers(loader pkgloading.Loader, data interface{}) []jadeplib.Resolver {
-	return nil
+	r, err := bazeldepsresolver.NewResolver(context.Background(), c.workspaceDir, *thirdpartyJvmDir, loader)
+	if err != nil {
+		log.Printf("Warning: couldn't create bazel-deps resolver: %v", err)
+		return nil
+	}
+	return []jadeplib.Resolver{r}
 }
 
 func (c customization) NewLoader(ctx context.Context, flags *jadepmain.Flags, workspaceDir string) (pkgloading.Loader, func(), error) {
