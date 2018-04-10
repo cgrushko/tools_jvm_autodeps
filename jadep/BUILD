@@ -8,7 +8,7 @@ gazelle(
 genrule(
     name = "jdk_android_builtin_class_names",
     outs = ["jdk_android_builtin_class_names.txt"],
-    cmd = "$(location //list_classes_in_jar) $(JAVABASE)/jre/lib/rt.jar > $@",
+    cmd = "$(location //cmd/list_classes_in_jar) $(JAVABASE)/jre/lib/rt.jar > $@",
     toolchains = ["@bazel_tools//tools/jdk:current_java_runtime"],
-    tools = ["//list_classes_in_jar"],
+    tools = ["//cmd/list_classes_in_jar"],
 )
