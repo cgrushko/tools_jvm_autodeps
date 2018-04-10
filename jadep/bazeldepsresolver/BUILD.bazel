@@ -2,28 +2,25 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
-    srcs = ["fsresolver.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/fsresolver",
+    srcs = ["bazeldepsresolver.go"],
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/bazeldepsresolver",
     visibility = ["//visibility:public"],
     deps = [
         "//bazel:go_default_library",
-        "//filter:go_default_library",
-        "//graphs:go_default_library",
         "//jadeplib:go_default_library",
+        "//listclassesinjar:go_default_library",
         "//pkgloading:go_default_library",
-        "//vlog:go_default_library",
     ],
 )
 
 go_test(
     name = "go_default_test",
-    srcs = ["fsresolver_test.go"],
+    srcs = ["bazeldepsresolver_test.go"],
     embed = [":go_default_library"],
     deps = [
         "//bazel:go_default_library",
         "//jadeplib:go_default_library",
         "//loadertest:go_default_library",
-        "//pkgloaderfakes:go_default_library",
         "@com_github_google_go_cmp//cmp:go_default_library",
     ],
 )
