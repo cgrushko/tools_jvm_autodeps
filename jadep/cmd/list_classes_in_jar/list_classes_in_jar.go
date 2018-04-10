@@ -19,12 +19,13 @@
 package main
 
 import (
-	"archive/zip"
 	"fmt"
 	"log"
 	"os"
 	"sort"
-	"strings"
+
+	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadep/listclassesinjar"
 )
 
 func main() {
@@ -33,23 +34,16 @@ func main() {
 	}
 
 	var classes []string
-	seen := make(map[string]bool)
+	seen := make(map[jadeplib.ClassName]bool)
 	for i := 1; i < len(os.Args); i++ {
-		r, err := zip.OpenReader(os.Args[i])
+		cls, err := listclassesinjar.List(os.Args[i])
 		if err != nil {
-			log.Fatalf("Error opening file %s:\n%v", os.Args[1], err)
+			log.Fatal(err)
 		}
-		defer r.Close()
-
-		for _, f := range r.File {
-			fn := f.Name
-			if strings.Contains(fn, "$") || !strings.HasSuffix(fn, ".class") {
-				continue
-			}
-			c := strings.Replace(strings.TrimSuffix(fn, ".class"), "/", ".", -1)
+		for _, c := range cls {
 			if !seen[c] {
 				seen[c] = true
-				classes = append(classes, c)
+				classes = append(classes, string(c))
 			}
 		}
 	}
