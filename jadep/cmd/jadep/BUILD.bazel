@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/cmd/jadep",
     visibility = ["//visibility:private"],
     deps = [
+        "//bazeldepsresolver:go_default_library",
         "//cli:go_default_library",
         "//filter:go_default_library",
         "//grpcloader:go_default_library",
