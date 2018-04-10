@@ -26,6 +26,7 @@ import (
 	"context"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadep/loadertest"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloaderfakes"
 	"github.com/google/go-cmp/cmp"
 )
@@ -197,7 +198,7 @@ func TestResolve(t *testing.T) {
 				t.Error(err)
 			}
 			defer cleanup()
-			resolver := NewResolver([]string{"java/", "javatest"}, workDir, &testLoader{test.existingPkgs})
+			resolver := NewResolver([]string{"java/", "javatest"}, workDir, &loadertest.StubLoader{Pkgs: test.existingPkgs})
 			actual, err := resolver.Resolve(context.Background(), test.classnames, nil)
 			if err != nil {
 				t.Errorf("Resolve(%s) failed: %v. On iteration %v.", test.classnames, err, i)
@@ -231,7 +232,7 @@ func TestResolvePackageNotReturned(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resolver := NewResolver([]string{"java/", "javatest"}, workDir, &testLoader{nil})
+	resolver := NewResolver([]string{"java/", "javatest"}, workDir, &loadertest.StubLoader{Pkgs: nil})
 	got, err := resolver.Resolve(context.Background(), []jadeplib.ClassName{"x.Foo"}, nil)
 	if err != nil {
 		t.Fatalf("Resolve returned error %v, want nil", err)
@@ -270,7 +271,7 @@ func BenchmarkResolve(b *testing.B) {
 		b.Error(err)
 	}
 	defer cleanup()
-	resolver := NewResolver([]string{"java/", "javatest"}, workDir, &testLoader{existingPkgs})
+	resolver := NewResolver([]string{"java/", "javatest"}, workDir, &loadertest.StubLoader{Pkgs: existingPkgs})
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -312,18 +313,4 @@ func createBuildFileDir(t *testing.T, pkgNames []string, workDir string) (func()
 			os.RemoveAll(filepath.Join(workDir, p))
 		}
 	}, nil
-}
-
-type testLoader struct {
-	pkgs map[string]*bazel.Package
-}
-
-func (l *testLoader) Load(ctx context.Context, packages []string) (map[string]*bazel.Package, error) {
-	result := make(map[string]*bazel.Package)
-	for _, pkgName := range packages {
-		if p, ok := l.pkgs[pkgName]; ok {
-			result[pkgName] = p
-		}
-	}
-	return result, nil
 }
