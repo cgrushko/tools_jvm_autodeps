@@ -30,6 +30,7 @@ func TestLabelSplit(t *testing.T) {
 		{"//foo/bar", "foo/bar", "bar"},
 		{"//foo/bar/zoo", "foo/bar/zoo", "zoo"},
 		{"//foo", "foo", "foo"},
+		{"@r//foo", "@r//foo", "foo"},
 	}
 
 	for _, tt := range tests {
@@ -50,8 +51,10 @@ func TestParseRelativeLabel(t *testing.T) {
 		{"", "//foo:bar", "//foo:bar"},
 		{"foo", ":bar", "//foo:bar"},
 		{"foo", "bar", "//foo:bar"},
+		{"@r//foo", "bar", "@r//foo:bar"},
 		{"dontcare", "//foo/bar:bar", "//foo/bar:bar"},
 		{"dontcare", "//foo/bar:baz", "//foo/bar:baz"},
+		{"dontcare", "@r//foo/bar:baz", "@r//foo/bar:baz"},
 	}
 	for _, tt := range tests {
 		got, err := ParseRelativeLabel(tt.pkgName, tt.s)
@@ -70,6 +73,7 @@ func TestParseRelativeLabelErrors(t *testing.T) {
 		wantErr    string
 	}{
 		{"dontcare", "foo:bar", `label "foo:bar" doesn't start with // or @, but also contains a colon`},
+		{"@r//foo//", "bar", `package name "@r//foo//" contains '//' more than once`},
 	}
 	for _, tt := range tests {
 		_, err := ParseRelativeLabel(tt.pkgName, tt.s)
@@ -87,10 +91,14 @@ func TestParseAbsoluteLabel(t *testing.T) {
 	}{
 		{"//foo", "", "//foo:foo"},
 		{"//foo/bar", "", "//foo/bar:bar"},
-		{"foo", `invalid label "foo"`, ""},
-		{":foo", `invalid label ":foo"`, ""},
+		{"foo", `absolute label must start with // or @, "foo" is neither`, ""},
+		{":foo", `absolute label must start with // or @, ":foo" is neither`, ""},
+		{"//foo:fo:o", `target name "foo" contains ':'`, ""},
+		{"@//:foo", "", "@//:foo"},
+		{"@//asd//:foo", `package name "@//asd//" contains '//' more than once`, ""},
 		{"//foo:foo", "", "//foo:foo"},
 		{"//foo/bar:foo", "", "//foo/bar:foo"},
+		{"@r//foo/bar:foo", "", "@r//foo/bar:foo"},
 	}
 	for _, tt := range tests {
 		got, err := ParseAbsoluteLabel(tt.s)
@@ -123,6 +131,56 @@ func TestLabelListAttr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		got := tt.rule.LabelListAttr(tt.attr)
+		if diff := cmp.Diff(got, tt.want); diff != "" {
+			t.Errorf("rule.LabelListAttr(%s) has diff (-got +want):\nrule = %v\n\ndiff = %v", tt.attr, tt.rule, diff)
+		}
+	}
+}
+
+func TestLabelAttr(t *testing.T) {
+	tests := []struct {
+		rule    *Rule
+		attr    string
+		want    Label
+		wantErr string
+	}{
+		{
+			rule: &Rule{PkgName: "x", Attrs: map[string]interface{}{"attr": "//foo:bar"}},
+			attr: "attr",
+			want: Label("//foo:bar"),
+		},
+		{
+			rule: &Rule{PkgName: "x", Attrs: map[string]interface{}{"attr": "//foo"}},
+			attr: "attr",
+			want: Label("//foo:foo"),
+		},
+		{
+			rule: &Rule{PkgName: "x", Attrs: map[string]interface{}{"attr": ":bar"}},
+			attr: "attr",
+			want: Label("//x:bar"),
+		},
+		{
+			rule:    &Rule{PkgName: "x", Attrs: map[string]interface{}{"attr": []string(nil)}},
+			attr:    "attr",
+			wantErr: "//x:'s attr is not a string, can't parse to label",
+		},
+		{
+			rule:    &Rule{PkgName: "x", Attrs: map[string]interface{}{"attr": "a:"}},
+			attr:    "attr",
+			wantErr: `can't read //x:'s attr as label: label "a:" doesn't start with // or @, but also contains a colon`,
+		},
+	}
+	for _, tt := range tests {
+		got, err := tt.rule.LabelAttr(tt.attr)
+		if err == nil {
+			if tt.wantErr != "" {
+				t.Errorf("Got no error, want %q", tt.wantErr)
+			}
+		} else {
+			if diff := cmp.Diff(err.Error(), tt.wantErr); diff != "" {
+				t.Errorf("rule.LabelListAttr(%s) returns the wrong error (-got +want): %v", tt.attr, diff)
+			}
+		}
 		if diff := cmp.Diff(got, tt.want); diff != "" {
 			t.Errorf("rule.LabelListAttr(%s) has diff (-got +want):\nrule = %v\n\ndiff = %v", tt.attr, tt.rule, diff)
 		}

@@ -46,6 +46,9 @@ func ParseRelativeLabel(pkg, s string) (Label, error) {
 	if strings.HasPrefix(s, "//") || strings.HasPrefix(s, "@") {
 		return ParseAbsoluteLabel(s)
 	}
+	if strings.Count(pkg, "//") > 1 {
+		return Label(""), fmt.Errorf("package name %q contains '//' more than once", pkg)
+	}
 	if s == "" {
 		return Label(""), fmt.Errorf("empty label")
 	}
@@ -56,6 +59,9 @@ func ParseRelativeLabel(pkg, s string) (Label, error) {
 	if s[0] == ':' {
 		s = s[1:]
 	}
+	if strings.HasPrefix(pkg, "@") {
+		return Label(pkg + ":" + s), nil
+	}
 	return Label("//" + pkg + ":" + s), nil
 }
 
@@ -64,26 +70,17 @@ func ParseRelativeLabel(pkg, s string) (Label, error) {
 //
 // See https://bazel.build/versions/master/docs/build-ref.html#labels.
 func ParseAbsoluteLabel(s string) (Label, error) {
+	if !strings.HasPrefix(s, "//") && !strings.HasPrefix(s, "@") {
+		return Label(""), fmt.Errorf("absolute label must start with // or @, %q is neither", s)
+	}
 	i := strings.Index(s, "//")
 	if i < 0 {
 		return Label(""), fmt.Errorf("invalid label %q", s)
 	}
 
-	if s[0] == '@' {
-		s = s[i:]
-		i = 0
-	}
-	if i != 0 {
-		return Label(""), fmt.Errorf("invalid label %q", s)
-	}
-
 	// Bazel accepts invalid labels starting with more than two slashes,
 	// thus so must we for now.
-	if false {
-		s = s[len("//"):]
-	} else {
-		s = strings.TrimLeft(s, "/")
-	}
+	s = strings.TrimLeft(s, "/")
 
 	var pkg, name string
 	if i = strings.IndexByte(s, ':'); i < 0 {
@@ -95,7 +92,19 @@ func ParseAbsoluteLabel(s string) (Label, error) {
 		pkg = s[:i]
 		name = s[i+1:]
 	}
+	if strings.Count(pkg, "//") > 1 {
+		return Label(""), fmt.Errorf("package name %q contains '//' more than once", pkg)
+	}
+	if strings.Index(name, "//") != -1 {
+		return Label(""), fmt.Errorf("target name %q contains '//'", pkg)
+	}
+	if strings.Index(name, ":") != -1 {
+		return Label(""), fmt.Errorf("target name %q contains ':'", pkg)
+	}
 
+	if strings.HasPrefix(pkg, "@") {
+		return Label(pkg + ":" + name), nil
+	}
 	return Label("//" + pkg + ":" + name), nil
 }
 
@@ -185,6 +194,21 @@ func (r *Rule) StrAttr(attrName string, defaultValue string) string {
 	return val
 }
 
+// LabelAttr converts the attributes of a rule from
+// an interface type to a string.
+// If the attribute value is not a label, LabelAttr returns an error.
+func (r *Rule) LabelAttr(attrName string) (Label, error) {
+	val, ok := r.Attrs[attrName].(string)
+	if !ok {
+		return Label(""), fmt.Errorf("%s's %s is not a string, can't parse to label", r.Label(), attrName)
+	}
+	l, err := ParseRelativeLabel(r.PkgName, val)
+	if err != nil {
+		return Label(""), fmt.Errorf("can't read %s's %s as label: %v", r.Label(), attrName, err)
+	}
+	return l, nil
+}
+
 // Name returns the name of the rule (e.g. "collect").
 func (r *Rule) Name() string {
 	s, _ := r.Attrs["name"].(string)
@@ -193,6 +217,9 @@ func (r *Rule) Name() string {
 
 // Label returns the label of the rule (e.g. "//java:collect").
 func (r *Rule) Label() Label {
+	if strings.HasPrefix(r.PkgName, "@") {
+		return Label(r.PkgName + ":" + r.Name())
+	}
 	return Label("//" + r.PkgName + ":" + r.Name())
 }
 
