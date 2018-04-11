@@ -22,8 +22,8 @@ import (
 	"sync"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/compat"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/compat"
 )
 
 // Loader loads BUILD files.

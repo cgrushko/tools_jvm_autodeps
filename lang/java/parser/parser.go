@@ -24,16 +24,16 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/ast"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/ast"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node"
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/lang/java/parser/xrefs"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser/xrefs"
 
-	lpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang"
+	lpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang"
 
 	// Import the java parser so it can register itself.
-	_ "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/java"
+	_ "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/java"
 )
 
 // ReferencedClasses returns the set of class names that the provided Java source files reference.

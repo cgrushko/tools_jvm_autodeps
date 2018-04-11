@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"github.com/bazelbuild/buildtools/edit"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
 // Ref returns a token that Buildozer can use to manipulate a function call.

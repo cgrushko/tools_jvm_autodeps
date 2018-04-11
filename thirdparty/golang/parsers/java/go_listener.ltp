@@ -45,9 +45,9 @@ ${end-}
 
 ${end}
 
-${query nodeTypeRef() = '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".Type'}
+${query nodeTypeRef() = '"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node".Type'}
 ${query nodeTypeValueRef() =
-    '"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node".' + self->asRangeTypeName()->withLangPrefix()}
+    '"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node".' + self->asRangeTypeName()->withLangPrefix()}
 
 ${query langPrefix() = util.toFirstUpper(context.opts.lang)}
 

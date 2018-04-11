@@ -18,7 +18,7 @@ package ruleconsts
 import (
 	"regexp"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
 )
 
 var (

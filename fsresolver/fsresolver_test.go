@@ -24,10 +24,10 @@ import (
 	"testing"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/loadertest"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloaderfakes"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/loadertest"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloaderfakes"
 	"github.com/google/go-cmp/cmp"
 )
 

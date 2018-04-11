@@ -20,9 +20,9 @@ import (
 	"strings"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/compat"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/compat"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
 )
 
 const (

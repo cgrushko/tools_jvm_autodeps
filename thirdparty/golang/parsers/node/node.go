@@ -19,7 +19,7 @@ package node
 import (
 	"fmt"
 
-	lpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang"
+	lpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang"
 )
 
 // Type is the set of all AST node types returned by various language parsers.

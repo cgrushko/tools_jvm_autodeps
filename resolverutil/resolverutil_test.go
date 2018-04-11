@@ -17,8 +17,8 @@ package resolverutil
 import (
 	"testing"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 )

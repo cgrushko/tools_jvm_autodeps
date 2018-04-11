@@ -26,13 +26,13 @@ import (
 	"time"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/compat"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/compat"
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/grpc"
 
-	sgrpc "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
-	spb "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
+	sgrpc "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
+	spb "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
 )
 
 var (

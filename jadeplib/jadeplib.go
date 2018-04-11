@@ -25,12 +25,12 @@ import (
 	"time"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/compat"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/filter"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/future"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/compat"
+	"github.com/bazelbuild/tools_jvm_autodeps/filter"
+	"github.com/bazelbuild/tools_jvm_autodeps/future"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/vlog"
 )
 
 // Config specifies the content roots and workspace root.

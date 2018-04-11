@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
 func TestRef(t *testing.T) {

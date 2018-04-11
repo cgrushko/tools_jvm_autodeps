@@ -16,8 +16,8 @@
 package resolverutil
 
 import (
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
 )
 
 // SatisfiedByExistingDeps finds class names for which a satisfying dependency appears in the consuming rules.

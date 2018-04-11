@@ -17,7 +17,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/parsers"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/parsers"
 	"context"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"

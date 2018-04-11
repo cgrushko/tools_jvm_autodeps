@@ -21,12 +21,12 @@ import (
 	"strings"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/filter"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/graphs"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/filter"
+	"github.com/bazelbuild/tools_jvm_autodeps/graphs"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/vlog"
 )
 
 // Resolver uses the file system to resolve class names to Bazel rules.

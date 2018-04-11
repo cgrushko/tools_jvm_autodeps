@@ -25,10 +25,10 @@ import (
 	"testing"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/future"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloaderfakes"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/sortingdepsranker"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/future"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloaderfakes"
+	"github.com/bazelbuild/tools_jvm_autodeps/sortingdepsranker"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 )

@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
 )
 
 // List returns the list of Java class names in the Jar named fileName.

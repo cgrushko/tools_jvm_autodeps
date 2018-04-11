@@ -19,7 +19,7 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
 // UserInteractionHandler takes in a list of printable interfaces. It returns the

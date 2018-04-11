@@ -18,7 +18,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 	"github.com/google/go-cmp/cmp"
 )
 

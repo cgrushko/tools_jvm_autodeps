@@ -19,7 +19,7 @@ import (
 	"sort"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
 // StubLoader is a Loader that returns a preset response.

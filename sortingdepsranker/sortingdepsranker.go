@@ -17,7 +17,7 @@ package sortingdepsranker
 
 import (
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
 // Ranker is a jadeplib.DepsRanker that ranks labels by their lexicographic order.

@@ -26,14 +26,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazeldepsresolver"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/cli"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/filter"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/grpcloader"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadepmain"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/sortingdepsranker"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazeldepsresolver"
+	"github.com/bazelbuild/tools_jvm_autodeps/cli"
+	"github.com/bazelbuild/tools_jvm_autodeps/filter"
+	"github.com/bazelbuild/tools_jvm_autodeps/grpcloader"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadepmain"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/sortingdepsranker"
 )
 
 var flags jadepmain.Flags

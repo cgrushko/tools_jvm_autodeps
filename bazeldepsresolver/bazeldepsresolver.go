@@ -26,10 +26,10 @@ import (
 	"time"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/listclassesinjar"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/listclassesinjar"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
 )
 
 // Resolver resolves class names according to a third-party directory structue created by https://github.com/johnynek/bazel-deps/.

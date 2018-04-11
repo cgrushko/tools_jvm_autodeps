@@ -20,9 +20,9 @@ import (
 	"errors"
 	"fmt"
 
-	lpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node"
-	tpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/public/token"
+	lpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node"
+	tpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/public/token"
 	"context"
 )
 

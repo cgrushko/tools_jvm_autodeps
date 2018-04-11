@@ -24,8 +24,8 @@ import (
 	"os"
 	"sort"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/listclassesinjar"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/listclassesinjar"
 )
 
 func main() {

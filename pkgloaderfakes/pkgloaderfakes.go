@@ -15,7 +15,7 @@
 // Package pkgloaderfakes provides fakes for structs returned from pkgloaderclient.
 package pkgloaderfakes
 
-import "github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
+import "github.com/bazelbuild/tools_jvm_autodeps/bazel"
 
 // Pkg creates a Bazel package from a list of rules, as if they were returned by pkgloaderclient.Loader.
 func Pkg(rules []*bazel.Rule) *bazel.Package {

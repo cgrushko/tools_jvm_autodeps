@@ -18,8 +18,8 @@ import (
 	"time"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
 )
 
 // Customization is the specialization point for Main.

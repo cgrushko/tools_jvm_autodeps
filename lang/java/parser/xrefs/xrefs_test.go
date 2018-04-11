@@ -22,14 +22,14 @@ import (
 	"testing"
 
 	"flag"
-	lpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/ast"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node"
+	lpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/ast"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node"
 	"context"
 	"github.com/google/go-cmp/cmp"
 
 	// Import the java parser so it can register itself.
-	_ "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/java"
+	_ "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/java"
 )
 
 const testPath = ""

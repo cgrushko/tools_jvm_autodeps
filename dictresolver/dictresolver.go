@@ -21,11 +21,11 @@ import (
 	"io"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/future"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/resolverutil"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/future"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/resolverutil"
 )
 
 // Resolver resolves class names according to an in-memory map.

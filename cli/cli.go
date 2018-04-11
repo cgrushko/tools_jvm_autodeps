@@ -25,13 +25,13 @@ import (
 	"time"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/buildozer"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/future"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/lang/java/parser"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/buildozer"
+	"github.com/bazelbuild/tools_jvm_autodeps/future"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/vlog"
 )
 
 // FilesToParse returns the list of files to parse based on 'arg'.

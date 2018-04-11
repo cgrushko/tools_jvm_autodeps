@@ -24,7 +24,7 @@
 language java(go);
 
 lang = "java"
-package = "jadep/thirdparty/golang/parsers/java"
+package = "thirdparty/golang/parsers/java"
 eventBased = true
 cancellable = true
 reportTokens = [TraditionalComment, EndOfLineComment, Identifier, invalid_token]

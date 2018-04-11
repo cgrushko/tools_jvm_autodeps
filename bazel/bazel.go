@@ -77,8 +77,7 @@ func ParseAbsoluteLabel(s string) (Label, error) {
 	if i < 0 {
 		return Label(""), fmt.Errorf("invalid label %q", s)
 	}
-
-	// Bazel accepts invalid labels starting with more than two slashes,
+	// TODO: Bazel accepts invalid labels starting with more than two slashes,
 	// thus so must we for now.
 	s = strings.TrimLeft(s, "/")
 

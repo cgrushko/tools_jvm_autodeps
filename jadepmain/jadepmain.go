@@ -27,16 +27,16 @@ import (
 	"strings"
 
 	"context"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/buildozer"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/cli"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/dictresolver"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/fsresolver"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/future"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/jadeplib"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/lang/java/ruleconsts"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/pkgloading"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/buildozer"
+	"github.com/bazelbuild/tools_jvm_autodeps/cli"
+	"github.com/bazelbuild/tools_jvm_autodeps/dictresolver"
+	"github.com/bazelbuild/tools_jvm_autodeps/fsresolver"
+	"github.com/bazelbuild/tools_jvm_autodeps/future"
+	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
+	"github.com/bazelbuild/tools_jvm_autodeps/lang/java/ruleconsts"
+	"github.com/bazelbuild/tools_jvm_autodeps/pkgloading"
+	"github.com/bazelbuild/tools_jvm_autodeps/vlog"
 )
 
 // Main is an entry point to Jadep program.

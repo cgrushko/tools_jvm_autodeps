@@ -29,15 +29,15 @@ import (
 
 	"context"
 	"github.com/golang/protobuf/proto"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/bazel"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog"
+	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/vlog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 
-	mpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/messages_proto"
-	sgrpc "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
-	spb "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
+	mpb "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/messages_proto"
+	sgrpc "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
+	spb "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/services_proto"
 )
 
 // udsDialerOpt instructs gRPC to dial to a Unix domain socket.

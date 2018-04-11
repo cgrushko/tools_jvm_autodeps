@@ -7,8 +7,6 @@ Jadep is intended to manage `BUILD` files for your own code in the current Bazel
 
 Jadep is not an official Google product.
 
-[![Build status](https://badge.buildkite.com/38a87d1503f25d2cf22f75eed28b43318b91cb1a59f3d33aa3.svg)](https://buildkite.com/bazel/tools-jvm-autodeps)
-
 TODO: Example on Serializer.
 
 [![demo](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf.png)](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf?autoplay=1)

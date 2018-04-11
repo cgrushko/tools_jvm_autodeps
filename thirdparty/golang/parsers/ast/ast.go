@@ -40,10 +40,10 @@ import (
 	"errors"
 	"fmt"
 
-	lpb "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/parsers"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/util/offset"
+	lpb "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/parsers"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/util/offset"
 	"context"
 )
 

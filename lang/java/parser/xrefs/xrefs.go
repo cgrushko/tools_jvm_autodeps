@@ -19,8 +19,8 @@ package xrefs
 import (
 	"fmt"
 
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/ast"
-	"github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/node"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/ast"
+	"github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node"
 )
 
 var typeSelector = node.OneOf(node.JavaClassType, node.JavaPrimitiveType, node.JavaArrayType)
