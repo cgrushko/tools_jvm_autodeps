@@ -1,0 +1,24 @@
+---
+platforms:
+  ubuntu1604:
+    build_targets:
+    - "//cmd/jadep"
+    - "//java/com/google/devtools/javatools/jade/pkgloader:GrpcLocalServer_deploy.jar"
+    - "//:jdk_android_builtin_class_names"
+    build_flags:
+    - "--nocheck_visibility"
+    test_targets:
+    - "//..."
+    test_flags:
+    - "--nocheck_visibility"
+  macos:
+    build_targets:
+    - "//cmd/jadep"
+    - "//java/com/google/devtools/javatools/jade/pkgloader:GrpcLocalServer_deploy.jar"
+    - "//:jdk_android_builtin_class_names"
+    build_flags:
+    - "--nocheck_visibility"
+    test_targets:
+    - "//..."
+    test_flags:
+    - "--nocheck_visibility"
