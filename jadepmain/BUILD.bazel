@@ -6,7 +6,7 @@ go_library(
         "customization.go",
         "jadepmain.go",
     ],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/jadepmain",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadepmain",
     visibility = ["//visibility:public"],
     deps = [
         "//bazel:go_default_library",

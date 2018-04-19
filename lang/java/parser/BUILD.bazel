@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["parser.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/lang/java/parser",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser",
     visibility = ["//visibility:public"],
     deps = [
         "//jadeplib:go_default_library",

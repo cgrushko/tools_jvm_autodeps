@@ -9,7 +9,7 @@ proto_library(
 
 go_proto_library(
     name = "lang_go_proto",
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang",
     proto = ":lang_proto",
     visibility = ["//visibility:public"],
 )
@@ -17,6 +17,6 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":lang_go_proto"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/lang",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/lang",
     visibility = ["//visibility:public"],
 )
