@@ -7,7 +7,7 @@ Jadep is intended to manage `BUILD` files for your own code in the current Bazel
 
 Jadep is not an official Google product.
 
-TODO: Example on Serializer.
+[![Build status](https://badge.buildkite.com/38a87d1503f25d2cf22f75eed28b43318b91cb1a59f3d33aa3.svg)](https://buildkite.com/bazel/tools-jvm-autodeps)
 
 [![demo](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf.png)](https://asciinema.org/a/hbS6FBgF91iobsgCL96m9Loxf?autoplay=1)
 
@@ -30,6 +30,10 @@ TODO: Example on Serializer.
 ```
 ~/bin/jadep path/to/File.java
 ```
+
+## Detailed Example: Migrating a Java project to Bazel
+
+<https://github.com/cgrushko/text/blob/master/migrating-gjf-to-bazel.md>
 
 ## Building / Installation
 
