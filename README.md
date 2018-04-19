@@ -1,3 +1,5 @@
+test
+
 # Java Automatic Dependencies (Jadep)
 
 Jadep is a [Bazel](http://bazel.build) `BUILD` file generator for Java projects. It adds `BUILD`
