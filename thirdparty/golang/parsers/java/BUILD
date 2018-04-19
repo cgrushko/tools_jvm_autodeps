@@ -39,7 +39,7 @@ go_library(
         "parser_tables.go",
         "token.go",
     ],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/thirdparty/golang/parsers/java",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/java",
     visibility = ["//visibility:public"],
     deps = [
         "//thirdparty/golang/parsers/lang:go_default_library",

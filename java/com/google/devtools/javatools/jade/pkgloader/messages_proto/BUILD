@@ -18,12 +18,12 @@ java_proto_library(
 
 go_proto_library(
     name = "java_com_google_devtools_javatools_jade_pkgloader_messages_go_proto",
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/messages_proto",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/messages_proto",
     proto = ":java_com_google_devtools_javatools_jade_pkgloader_messages_proto",
 )
 
 go_library(
     name = "go_default_library",
     embed = [":java_com_google_devtools_javatools_jade_pkgloader_messages_go_proto"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/java/com/google/devtools/javatools/jade/pkgloader/messages_proto",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/java/com/google/devtools/javatools/jade/pkgloader/messages_proto",
 )

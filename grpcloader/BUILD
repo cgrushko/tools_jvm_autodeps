@@ -20,7 +20,7 @@ go_test(
 go_library(
     name = "go_default_library",
     srcs = ["grpcloader.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/grpcloader",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/grpcloader",
     visibility = ["//visibility:public"],
     deps = [
         "//bazel:go_default_library",
