@@ -112,7 +112,7 @@ func RulesToFix(ctx context.Context, config jadeplib.Config, relWorkingDir, arg 
 	}
 
 	// No rules consumes file name - create one,
-	newRule := jadeplib.CreateRule(filepath.Join(relWorkingDir, arg), namingRules, defaultRuleKind)
+	newRule := jadeplib.CreateRule(fileName, namingRules, defaultRuleKind)
 	err = buildozer.NewRule(config.WorkspaceDir, newRule)
 	if err != nil {
 		return nil, err

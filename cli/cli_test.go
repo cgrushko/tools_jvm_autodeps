@@ -213,6 +213,39 @@ func TestRulesToFixCreatesNewRule(t *testing.T) {
 	}
 }
 
+func TestRulesToFixCreatesNewRule_absFileName(t *testing.T) {
+	tmpDir, err := ioutil.TempDir("", "")
+	if err != nil {
+		t.Errorf("Can't create temp directory:\n%v", err)
+		return
+	}
+	workspaceRoot := filepath.Join(tmpDir, "jadep")
+	createFiles(t, workspaceRoot, []string{"WORKSPACE", "x/BUILD"})
+
+	config := jadeplib.Config{Loader: &loadertest.StubLoader{}, WorkspaceDir: workspaceRoot}
+	got, err := RulesToFix(context.Background(), config, "", filepath.Join(workspaceRoot, "x/Foo.java"), nil, "java_test")
+	if err != nil {
+		t.Errorf("RulesToFix returned error %v, want nil", err)
+	}
+	want := []*bazel.Rule{bazel.NewRule("java_test", "x", "Foo", map[string]interface{}{"srcs": []string{"Foo.java"}})}
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("RulesToFix returned diff (-want +got):\n%s", diff)
+	}
+
+	b, err := ioutil.ReadFile(filepath.Join(workspaceRoot, "x/BUILD"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantBuildContent := `java_test(
+    name = "Foo",
+    srcs = ["Foo.java"],
+)
+`
+	if string(b) != wantBuildContent {
+		t.Errorf("RulesToFix created a BUILD file with content\n%s\nwant\n%s", string(b), wantBuildContent)
+	}
+}
+
 func TestWorkspace(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
