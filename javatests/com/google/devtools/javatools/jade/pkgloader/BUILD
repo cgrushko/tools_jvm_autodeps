@@ -32,6 +32,7 @@ java_test(
         "//java/com/google/devtools/javatools/jade/pkgloader/services_proto:services_java_proto",
         "//thirdparty/jvm/com/google/truth",
         "//thirdparty/jvm/junit",
+        "@io_bazel//src/main/java/com/google/devtools/build/lib/vfs",
         "@io_bazel//src/main/java/com/google/devtools/build/lib/vfs/inmemoryfs",
     ],
 )
