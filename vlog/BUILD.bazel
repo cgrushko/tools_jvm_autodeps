@@ -3,6 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["vlog.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/vlog",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/vlog",
     visibility = ["//visibility:public"],
 )

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["resolverutil.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/resolverutil",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/resolverutil",
     visibility = ["//visibility:public"],
     deps = [
         "//bazel:go_default_library",

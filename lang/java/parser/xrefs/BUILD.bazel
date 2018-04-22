@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["xrefs.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/lang/java/parser/xrefs",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser/xrefs",
     visibility = ["//visibility:public"],
     deps = [
         "//thirdparty/golang/parsers/ast:go_default_library",

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["buildozer.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/jadep/buildozer",
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/buildozer",
     visibility = ["//visibility:public"],
     deps = [
         "//bazel:go_default_library",
