@@ -2,6 +2,8 @@ java_test(
     name = "SerializerTest",
     srcs = ["SerializerTest.java"],
     deps = [
+        "//java/com/google/devtools/javatools/jade/pkgloader:BazelPackageLoaderFactory",
+        "//java/com/google/devtools/javatools/jade/pkgloader:PackageLoaderFactory",
         "//java/com/google/devtools/javatools/jade/pkgloader:Serializer",
         "//java/com/google/devtools/javatools/jade/pkgloader/messages_proto:messages_java_proto",
         "//thirdparty/jvm/com/google/guava",

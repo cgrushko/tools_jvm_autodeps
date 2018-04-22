@@ -19,12 +19,8 @@ import static com.google.devtools.javatools.jade.pkgloader.Serializer.serialize;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.eventbus.EventBus;
 import com.google.devtools.build.lib.cmdline.PackageIdentifier;
-import com.google.devtools.build.lib.events.PrintingEventHandler;
-import com.google.devtools.build.lib.events.Reporter;
 import com.google.devtools.build.lib.packages.Package;
-import com.google.devtools.build.lib.skyframe.packages.GooglePackageLoader;
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
 import com.google.devtools.build.lib.vfs.FileSystem;
 import com.google.devtools.build.lib.vfs.FileSystemUtils;
@@ -41,6 +37,9 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SerializerTest {
 
+  private static final PackageLoaderFactory PACKAGE_LOADER_FACTORY =
+      new BazelPackageLoaderFactory();
+
   private PackageLoader packageLoader;
   private Path workspaceRoot;
 
@@ -55,11 +54,7 @@ public class SerializerTest {
     FileSystemUtils.writeContent(
         workspaceRoot.getRelative("tools/build_rules/prelude_-redacted-_noloads"), new byte[0]);
 
-    packageLoader =
-        GooglePackageLoader.builder(workspaceRoot)
-            .useDefaultSkylarkSemantics()
-            .setReporter(new Reporter(new EventBus(), PrintingEventHandler.ERRORS_TO_STDERR))
-            .build();
+    packageLoader = PACKAGE_LOADER_FACTORY.create(workspaceRoot, fs.getPath("/"), fs.getPath("/"));
   }
 
   @Test
