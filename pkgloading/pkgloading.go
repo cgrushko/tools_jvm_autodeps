@@ -41,7 +41,7 @@ type Loader interface {
 // Notice that 'b' is only requested once.
 // As a corollary, Load(P) will not call the underlying L.Load() at all if all of the packages in P have been previously loaded.
 //
-// Note that if an error occured when loading a set of packages, the failure will be cached and no loading will be re-attempted.
+// Note that if an error occurred when loading a set of packages, the failure will be cached and no loading will be re-attempted.
 // In particular, it's possible to poison the cache for P by loading [P, BadPkg] first.
 //
 // CachingLoader is concurrency-safe as long as the underlying loader's Load function is concurrency-safe.
@@ -69,7 +69,7 @@ type result struct {
 
 // Load loads packages using an underlying loader.
 // It will load each package at most once, and is safe to call concurrently.
-// The returned error is a concatentation of all errors from calls to the underlying loader that occured in order to load 'packages'.
+// The returned error is a concatentation of all errors from calls to the underlying loader that occurred in order to load 'packages'.
 func (l *CachingLoader) Load(ctx context.Context, packages []string) (map[string]*bazel.Package, error) {
 	var work, all []*entry
 	l.mu.Lock()
