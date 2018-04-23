@@ -75,7 +75,7 @@ func TestClassToFiles(t *testing.T) {
 func TestResolve(t *testing.T) {
 	type Attrs = map[string]interface{}
 
-	workDir, err := createWorkspace()
+	workDir, err := ioutil.TempDir("", "jadep")
 	if err != nil {
 		t.Error(err)
 	}
@@ -218,7 +218,7 @@ func TestResolve(t *testing.T) {
 // It creates java/x/BUILD, which makes Resolve request java/x from Loader. But, the Loader returns nothing.
 // This simulates loading packages that are so malformed that a PackageLoader will return nothing for them.
 func TestResolvePackageNotReturned(t *testing.T) {
-	workDir, err := createWorkspace()
+	workDir, err := ioutil.TempDir("", "jadep")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -258,7 +258,7 @@ func BenchmarkResolve(b *testing.B) {
 		classNames = append(classNames, jadeplib.ClassName(fmt.Sprintf("x%d.Foo0", i)))
 	}
 
-	workDir, err := createWorkspace()
+	workDir, err := ioutil.TempDir("", "jadep")
 	if err != nil {
 		b.Error(err)
 	}
@@ -277,24 +277,6 @@ func BenchmarkResolve(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		resolver.Resolve(context.Background(), classNames, nil)
 	}
-}
-
-func createWorkspace() (string, error) {
-	root, err := ioutil.TempDir("", "jadep")
-	if err != nil {
-		return "", fmt.Errorf("error called ioutil.TempDir: %v", err)
-	}
-	workDir := filepath.Join(root, "google3")
-	if err := os.MkdirAll(filepath.Join(workDir, "tools/build_rules"), 0700); err != nil {
-		return "", fmt.Errorf("error called MkdirAll: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workDir, "tools/build_rules/BUILD"), nil, 0666); err != nil {
-		return "", fmt.Errorf("error called WriteFile: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workDir, "tools/build_rules/prelude_-redacted-"), []byte("# must be non-empty"), 0666); err != nil {
-		return "", fmt.Errorf("error called WriteFile: %v", err)
-	}
-	return workDir, nil
 }
 
 func createBuildFileDir(t *testing.T, pkgNames []string, workDir string) (func(), error) {
