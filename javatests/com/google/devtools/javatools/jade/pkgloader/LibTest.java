@@ -36,29 +36,28 @@ public class LibTest {
 
   private static final FileSystem FILESYSTEM = new InMemoryFileSystem();
   private Path workspaceRoot;
+  private Path installBase;
+  private Path outputBase;
 
   @Before
   public void setUp() throws IOException {
     workspaceRoot = FILESYSTEM.getPath("/workspace/");
-    workspaceRoot.createDirectory();
-    FileSystemUtils.writeContent(workspaceRoot.getRelative("WORKSPACE"), new byte[0]);
-    workspaceRoot.getRelative("tools/build_rules/").createDirectoryAndParents();
-    FileSystemUtils.writeContent(workspaceRoot.getRelative("tools/build_rules/BUILD"), new byte[0]);
-    FileSystemUtils.writeContent(
-        workspaceRoot.getRelative("tools/build_rules/prelude_-redacted-_noloads"), new byte[0]);
+    installBase = FILESYSTEM.getPath("/install_base/");
+    outputBase = FILESYSTEM.getPath("/output_base/");
+    Workspace.create(workspaceRoot, installBase, outputBase);
   }
 
   @Test
   public void basic() throws Exception {
     workspaceRoot.getRelative("foo/bar").createDirectoryAndParents();
     FileSystemUtils.writeLinesAs(
-        workspaceRoot.getRelative("foo/bar/BUILD"), UTF_8, "java_test(name = 'Foo')");
+        workspaceRoot.getRelative("foo/bar/BUILD"), UTF_8, "sh_library(name = 'Foo')");
 
     LoaderRequest request =
         LoaderRequest.newBuilder()
             .setWorkspaceDir(workspaceRoot.getPathString())
-            .setInstallBase("/")
-            .setOutputBase("/")
+            .setInstallBase(installBase.getPathString())
+            .setOutputBase(outputBase.getPathString())
             .addPackages("foo/bar")
             .build();
     LoaderResponse response = Lib.load(PACKAGE_LOADER_FACTORY, FILESYSTEM, request);
