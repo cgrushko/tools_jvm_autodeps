@@ -249,8 +249,11 @@ func TestRulesToFixCreatesNewRule_absFileName(t *testing.T) {
 func TestWorkspace(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
-		t.Errorf("Can't create temp directory:\n%v", err)
-		return
+		t.Fatalf("Can't create temp directory:\n%v", err)
+	}
+	tmpDir, err = filepath.EvalSymlinks(tmpDir)
+	if err != nil {
+		t.Fatalf("EvalSymlinks failed:\n%v", err)
 	}
 	testRoot := filepath.Join(tmpDir, "jadep")
 
