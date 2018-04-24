@@ -47,14 +47,11 @@ public class SerializerTest {
   public void setUp() throws IOException {
     FileSystem fs = new InMemoryFileSystem();
     workspaceRoot = fs.getPath("/workspace/");
-    workspaceRoot.createDirectory();
-    FileSystemUtils.writeContent(workspaceRoot.getRelative("WORKSPACE"), new byte[0]);
-    workspaceRoot.getRelative("tools/build_rules/").createDirectoryAndParents();
-    FileSystemUtils.writeContent(workspaceRoot.getRelative("tools/build_rules/BUILD"), new byte[0]);
-    FileSystemUtils.writeContent(
-        workspaceRoot.getRelative("tools/build_rules/prelude_-redacted-_noloads"), new byte[0]);
+    Path installBase = fs.getPath("/install_base/");
+    Path outputBase = fs.getPath("/output_base/");
+    Workspace.create(workspaceRoot, installBase, outputBase);
 
-    packageLoader = PACKAGE_LOADER_FACTORY.create(workspaceRoot, fs.getPath("/"), fs.getPath("/"));
+    packageLoader = PACKAGE_LOADER_FACTORY.create(workspaceRoot, installBase, outputBase);
   }
 
   @Test
