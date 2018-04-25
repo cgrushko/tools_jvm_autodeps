@@ -37,19 +37,19 @@ func TestUserInteractionHandler(t *testing.T) {
 	}
 	for idx, test := range tests {
 		in := bytes.NewReader([]byte(test.input))
-		i, err := UserInteractionHandler(in, test.rules)
+		i, err := ask(in, "description", test.rules)
 		if err != nil {
 			t.Errorf("Test case %d returned unexpected error:\n%v", idx, err)
 		}
 		if i != test.want {
-			t.Errorf("UserInteractionHandler returned index %v, want %v", i, test.want)
+			t.Errorf("ask returned index %v, want %v", i, test.want)
 		}
 	}
 }
 
 func TestUserInteractionHandlerNoStdin(t *testing.T) {
 	in := bytes.NewReader(nil)
-	_, err := UserInteractionHandler(in, []bazel.Label{"", ""})
+	_, err := ask(in, "description", []bazel.Label{"", ""})
 	wantErr := "Error reading stdin: EOF"
 	if err.Error() != wantErr {
 		t.Errorf("Want error %q, got: %v", wantErr, err)

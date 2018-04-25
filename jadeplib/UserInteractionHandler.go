@@ -22,17 +22,22 @@ import (
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 )
 
-// UserInteractionHandler takes in a list of printable interfaces. It returns the
+// ask takes in a list of printable interfaces. It returns the
 // input from the user indicating which interfaces is wanted.
-// UserInteractionHandler keeps asking the user for input until a valid input is given.
+// ask keeps asking the user for input until a valid input is given.
 // If reading from stdin fails, returns an error.
-func UserInteractionHandler(in io.Reader, options []bazel.Label) (int, error) {
+func ask(in io.Reader, description string, options []bazel.Label) (int, error) {
 	if len(options) == 1 {
 		return 1, nil
 	}
-	for i, r := range options {
-		fmt.Printf("%v. %v\n", i+1, r)
+	fmt.Println()
+	for i := len(options) - 1; i >= 0; i-- {
+		fmt.Printf("[%v] %v\n", i+1, options[i])
 	}
+	fmt.Println("[0] None")
+
+	fmt.Print(description)
+	fmt.Printf("Enter a number to choose, or just Enter to select the default [%s]\n", options[0])
 	for {
 		var i string
 		if _, err := fmt.Fscanln(in, &i); err != nil {
@@ -62,10 +67,7 @@ func SelectDepsToAdd(in io.Reader, missingDepsMap map[*bazel.Rule]map[ClassName]
 			if depAlreadySatisfied(addedDeps, rules) {
 				continue
 			}
-			fmt.Println()
-			fmt.Printf("%v has missing dependencies %v which can be used to satisfy class name %v.\n Pick the rule, input 0 for no rule and enter for 1st option.\n", rule.Label(), rules, class)
-
-			idx, err := UserInteractionHandler(in, rules)
+			idx, err := ask(in, fmt.Sprintf("Choose a BUILD rule for %s to add to %s.\n", class, rule.Label()), rules)
 			if err != nil {
 				return nil, err
 			}
