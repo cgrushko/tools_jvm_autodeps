@@ -203,6 +203,9 @@ func resolveAll(ctx context.Context, resolvers []Resolver, classNames []ClassNam
 		resultUnresolved[c] = true
 	}
 	for _, res := range resolvers {
+		if len(resultUnresolved) == 0 {
+			break
+		}
 		var classNames []ClassName
 		for cls := range resultUnresolved {
 			classNames = append(classNames, cls)

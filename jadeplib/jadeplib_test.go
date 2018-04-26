@@ -85,6 +85,20 @@ func TestResolveAll(t *testing.T) {
 			[]ClassName{"c"},
 			map[Resolver]error{},
 		},
+		{
+			desc: "stop when all class names have been resolved",
+			resolvers: []Resolver{
+				&testResolver{[]ClassName{"a"}, map[ClassName][]*bazel.Rule{"a": {{PkgName: "p1"}}}},
+				// If the following resolver were to be called, we'd get an error because the class name it expects
+				// is not in classnamesToResolve, below.
+				// This means that if the test succeeds, resolveAll() didn't call this resolver, which means
+				// it stopped calling resolvers once "a" was resolved, as required.
+				&testResolver{expectedRequested: []ClassName{"unexpected - should not be called"}},
+			},
+			classnamesToResolve: []ClassName{"a"},
+			wantResolved:        map[ClassName][]*bazel.Rule{"a": {{PkgName: "p1"}}},
+			wantErrors:          map[Resolver]error{},
+		},
 	}
 
 	for _, tt := range tests {
