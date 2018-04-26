@@ -27,6 +27,7 @@ import (
 	"context"
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/buildozer"
+	"github.com/bazelbuild/tools_jvm_autodeps/color"
 	"github.com/bazelbuild/tools_jvm_autodeps/future"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
 	"github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser"
@@ -211,10 +212,30 @@ func ReportUnresolvedClassnames(unresolvedClassNames []jadeplib.ClassName) {
 	if len(unresolvedClassNames) == 0 {
 		return
 	}
-	log.Printf("Class names we don't know how to satisfy:")
+	printHeader("Couldn't find BUILD rules for class names:", color.BoldMagenta)
 	for _, cls := range unresolvedClassNames {
-		log.Println(cls)
+		log.Println(color.Magenta("?DEP") + color.DarkGray(" for ") + string(cls))
 	}
+}
+
+// ReportAddedDeps prints which deps this Jadep run added to which consuming rule.
+func ReportAddedDeps(addedDeps map[*bazel.Rule][]bazel.Label) {
+	if len(addedDeps) == 0 {
+		return
+	}
+
+	for consuming, deps := range addedDeps {
+		printHeader("Added to "+string(consuming.Label()), color.BoldGreen)
+		for _, dep := range deps {
+			log.Println(color.Green("+DEP") + " " + string(dep))
+		}
+	}
+}
+
+func printHeader(header string, colorizer func(string) string) {
+	log.Println("")
+	log.Println(colorizer(header))
+	log.Println(colorizer(strings.Repeat("-", len(header))))
 }
 
 // ClassNamesToResolve returns the list of class names which should be satisfied with BUILD dependencies.

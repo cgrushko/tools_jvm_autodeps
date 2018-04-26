@@ -70,6 +70,7 @@ func init() {
 	flag.DurationVar(&flags.RPCDeadline, "rpc_deadline", 15*time.Second, "Time before giving up on RPC connections.")
 	flag.StringVar(&flags.Cpuprofile, "cpuprofile", "", "write cpu profile to file")
 	flag.IntVar(&flags.Vlevel, "vlevel", 0, "Enable V-leveled logging at the specified level")
+	flag.BoolVar(&flags.Color, "color", true, "Colorize output. If stdout or stderr are not terminals, the output will not be colorized and this flag will have no effect")
 }
 
 func main() {

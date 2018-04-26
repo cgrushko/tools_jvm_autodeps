@@ -17,7 +17,6 @@
 package jadepmain
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -30,6 +29,7 @@ import (
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/buildozer"
 	"github.com/bazelbuild/tools_jvm_autodeps/cli"
+	"github.com/bazelbuild/tools_jvm_autodeps/color"
 	"github.com/bazelbuild/tools_jvm_autodeps/dictresolver"
 	"github.com/bazelbuild/tools_jvm_autodeps/fsresolver"
 	"github.com/bazelbuild/tools_jvm_autodeps/future"
@@ -46,6 +46,7 @@ import (
 func Main(custom Customization, flags *Flags, args []string) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	vlog.Level = flags.Vlevel
+	color.Enabled = flags.Color
 	ctx := context.Background()
 	stopProfiler := cli.StartProfiler(flags.Cpuprofile)
 	defer stopProfiler()
@@ -90,8 +91,6 @@ func Main(custom Customization, flags *Flags, args []string) {
 			continue
 		}
 
-		cli.ReportUnresolvedClassnames(unresClasses)
-		fmt.Println()
 		if flags.DryRun {
 			cli.ReportMissingDeps(missingDepsMap)
 		} else {
@@ -106,7 +105,9 @@ func Main(custom Customization, flags *Flags, args []string) {
 				log.Printf("WARNING: error adding missing deps to rules:\n%v", err)
 				continue
 			}
+			cli.ReportAddedDeps(depsToAdd)
 		}
+		cli.ReportUnresolvedClassnames(unresClasses)
 	}
 }
 

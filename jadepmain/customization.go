@@ -78,4 +78,7 @@ type Flags struct {
 
 	// See corresponding flag in jadep.go
 	Vlevel int
+
+	// See corresponding flag in jadep.go
+	Color bool
 }
