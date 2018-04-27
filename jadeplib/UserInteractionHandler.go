@@ -20,6 +20,7 @@ import (
 	"strconv"
 
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
+	"github.com/bazelbuild/tools_jvm_autodeps/color"
 )
 
 // ask takes in a list of printable interfaces. It returns the
@@ -30,14 +31,12 @@ func ask(in io.Reader, description string, options []bazel.Label) (int, error) {
 	if len(options) == 1 {
 		return 1, nil
 	}
-	fmt.Println()
 	for i := len(options) - 1; i >= 0; i-- {
 		fmt.Printf("[%v] %v\n", i+1, options[i])
 	}
 	fmt.Println("[0] None")
 
 	fmt.Print(description)
-	fmt.Printf("Enter a number to choose, or just Enter to select the default [%s]\n", options[0])
 	for {
 		var i string
 		if _, err := fmt.Fscanln(in, &i); err != nil {
@@ -67,7 +66,12 @@ func SelectDepsToAdd(in io.Reader, missingDepsMap map[*bazel.Rule]map[ClassName]
 			if depAlreadySatisfied(addedDeps, rules) {
 				continue
 			}
-			idx, err := ask(in, fmt.Sprintf("Choose a BUILD rule for %s to add to %s.\n", class, rule.Label()), rules)
+			fmt.Println()
+			fmt.Printf("The BUILD rule %s is missing a dependency. Choose one of the options below:\n", rule.Label())
+			description := fmt.Sprintf(`For class:  %s
+Suggestion: %s
+Hit Enter to accept, or a number to choose: `, color.Bold(string(class)), color.Bold(string(rules[0])))
+			idx, err := ask(in, description, rules)
 			if err != nil {
 				return nil, err
 			}
