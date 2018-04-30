@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["offset.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/util/offset",
-    visibility = ["//visibility:public"],
-)

@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["loadertest.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/loadertest",
-    visibility = ["//visibility:public"],
-    deps = ["//bazel:go_default_library"],
-)

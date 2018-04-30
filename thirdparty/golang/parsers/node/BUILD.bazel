@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["node.go"],
-    importpath = "github.com/bazelbuild/tools_jvm_autodeps/thirdparty/golang/parsers/node",
-    visibility = ["//visibility:public"],
-    deps = ["//thirdparty/golang/parsers/lang:go_default_library"],
-)
