@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["dictresolver.go"],
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/dictresolver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel:go_default_library",
+        "//future:go_default_library",
+        "//jadeplib:go_default_library",
+        "//pkgloading:go_default_library",
+        "//resolverutil:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["dictresolver_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//bazel:go_default_library",
+        "//future:go_default_library",
+        "//jadeplib:go_default_library",
+        "//loadertest:go_default_library",
+        "//pkgloaderfakes:go_default_library",
+        "@com_github_google_go_cmp//cmp:go_default_library",
+    ],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["xrefs.go"],
+    importpath = "github.com/bazelbuild/tools_jvm_autodeps/lang/java/parser/xrefs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//thirdparty/golang/parsers/ast:go_default_library",
+        "//thirdparty/golang/parsers/node:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["xrefs_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//thirdparty/golang/parsers/ast:go_default_library",
+        "//thirdparty/golang/parsers/java:go_default_library",
+        "//thirdparty/golang/parsers/lang:go_default_library",
+        "//thirdparty/golang/parsers/node:go_default_library",
+        "@com_github_google_go_cmp//cmp:go_default_library",
+    ],
+)
