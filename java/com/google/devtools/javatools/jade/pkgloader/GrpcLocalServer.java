@@ -22,10 +22,8 @@ import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.servi
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderResponse;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.VersionResponse;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.VersionManagementGrpc.VersionManagementImplBase;
-import io.grpc.MethodDescriptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.ServerMethodDefinition;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.netty.NettyServerBuilder;
 import io.grpc.protobuf.services.ProtoReflectionService;
@@ -145,8 +143,6 @@ public class GrpcLocalServer {
         serverBuilder
             .addService(loaderServiceDef)
             .addService(versionServiceDef)
-            .addService(renameService(loaderServiceDef))
-            .addService(renameService(versionServiceDef))
             .addService(ProtoReflectionService.newInstance())
             .build();
     try {
@@ -203,43 +199,6 @@ public class GrpcLocalServer {
   private ServerBuilder<?> bindTCP(int port) throws Exception {
     logger.info("Binding to port: " + port);
     return NettyServerBuilder.forAddress(new InetSocketAddress("localhost", port));
-  }
-
-  /**
-   * renameService returns a copy of 'serviceDef', with all names renamed from
-   * "java.com.google.devtools.javatools.jade.pkgloader.services." to
-   * "java.com.google.devtools.javatools.jade.pkgloader."
-   *
-   * <p>The purpose is to allow clients to migrate to the new proto names (with "services.").
-   */
-  // TODO: Delete in a week.
-  private ServerServiceDefinition renameService(ServerServiceDefinition serviceDef) {
-    ServerServiceDefinition.Builder renamedServiceDef =
-        ServerServiceDefinition.builder(
-            serviceDef
-                .getServiceDescriptor()
-                .getName()
-                .replace(
-                    "java.com.google.devtools.javatools.jade.pkgloader.services.",
-                    "java.com.google.devtools.javatools.jade.pkgloader."));
-    for (ServerMethodDefinition<?, ?> method : serviceDef.getMethods()) {
-      renamedServiceDef.addMethod(renameGrpcMethod(method));
-    }
-    return renamedServiceDef.build();
-  }
-
-  /** See renameService(). */
-  private <ReqT, ResT> ServerMethodDefinition<ReqT, ResT> renameGrpcMethod(
-      ServerMethodDefinition<ReqT, ResT> method) {
-    MethodDescriptor<ReqT, ResT> descriptor = method.getMethodDescriptor();
-    String newname =
-        descriptor
-            .getFullMethodName()
-            .replace(
-                "java.com.google.devtools.javatools.jade.pkgloader.services.",
-                "java.com.google.devtools.javatools.jade.pkgloader.");
-    return ServerMethodDefinition.create(
-        descriptor.toBuilder().setFullMethodName(newname).build(), method.getServerCallHandler());
   }
 
   private static void deleteOnExit(Path path) {
