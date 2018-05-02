@@ -2,7 +2,7 @@ java_test(
     name = "SerializerTest",
     srcs = ["SerializerTest.java"],
     deps = [
-        ":Workspace",
+        ":MockWorkspace",
         "//java/com/google/devtools/javatools/jade/pkgloader:BazelPackageLoaderFactory",
         "//java/com/google/devtools/javatools/jade/pkgloader:PackageLoaderFactory",
         "//java/com/google/devtools/javatools/jade/pkgloader:Serializer",
@@ -29,7 +29,7 @@ java_test(
     name = "LibTest",
     srcs = ["LibTest.java"],
     deps = [
-        ":Workspace",
+        ":MockWorkspace",
         "//java/com/google/devtools/javatools/jade/pkgloader:BazelPackageLoaderFactory",
         "//java/com/google/devtools/javatools/jade/pkgloader:Lib",
         "//java/com/google/devtools/javatools/jade/pkgloader:PackageLoaderFactory",
@@ -42,8 +42,8 @@ java_test(
 )
 
 java_library(
-    name = "Workspace",
-    srcs = ["Workspace.java"],
+    name = "MockWorkspace",
+    srcs = ["MockWorkspace.java"],
     deps = [
         "@io_bazel//src/main/java/com/google/devtools/build/lib/vfs",
     ],

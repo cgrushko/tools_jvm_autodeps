@@ -19,16 +19,18 @@ import com.google.devtools.build.lib.vfs.Path;
 import java.io.IOException;
 
 /**
- * Workspace creates Bazel workspace directories with all required files, for testing purposes.
+ * MockWorkspace creates Bazel workspace directories with all required files, for testing purposes.
  */
-public class Workspace {
+public class MockWorkspace {
 
   /**
    * create() creates a Bazel workspace for use with PackageLoader.
    *
-   * It's behavior is tied to a specific version of Bazel, and might stop working if Bazel changes
+   * Its behavior is tied to a specific version of Bazel, and might stop working if Bazel changes
    * significantly. Still, I think it's easier to update this once in a while than to interface with
    * Bazel.
+   *
+   * This is a Java version of grpcloader/mockworkspace_test.go.
    */
   static void create(Path workspaceRoot, Path installBase, Path outputBase) throws IOException {
     workspaceRoot.createDirectoryAndParents();
@@ -56,11 +58,6 @@ public class Workspace {
     FileSystemUtils.writeIsoLatin1(
         tools.getRelative("tools/osx/xcode_configure.bzl"),
         "def xcode_configure(*args, **kwargs):",
-        "    pass");
-    FileSystemUtils.writeIsoLatin1(tools.getRelative("tools/sh/BUILD"), "");
-    FileSystemUtils.writeIsoLatin1(
-        tools.getRelative("tools/sh/sh_configure.bzl"),
-        "def sh_configure(*args, **kwargs):",
         "    pass");
 
     return tools;

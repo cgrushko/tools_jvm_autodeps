@@ -44,7 +44,7 @@ public class LibTest {
     workspaceRoot = FILESYSTEM.getPath("/workspace/");
     installBase = FILESYSTEM.getPath("/install_base/");
     outputBase = FILESYSTEM.getPath("/output_base/");
-    Workspace.create(workspaceRoot, installBase, outputBase);
+    MockWorkspace.create(workspaceRoot, installBase, outputBase);
   }
 
   @Test

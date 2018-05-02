@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_test(
     name = "go_default_test",
-    srcs = ["grpcloader_test.go"],
+    srcs = [
+        "grpcloader_test.go",
+        "mockworkspace_test.go",
+    ],
     args = ["--pkg_loader_executable=$(location //java/com/google/devtools/javatools/jade/pkgloader:GrpcLocalServer)"],
     data = [
         "//java/com/google/devtools/javatools/jade/pkgloader:GrpcLocalServer",

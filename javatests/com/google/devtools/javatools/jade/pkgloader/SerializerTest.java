@@ -49,7 +49,7 @@ public class SerializerTest {
     workspaceRoot = fs.getPath("/workspace/");
     Path installBase = fs.getPath("/install_base/");
     Path outputBase = fs.getPath("/output_base/");
-    Workspace.create(workspaceRoot, installBase, outputBase);
+    MockWorkspace.create(workspaceRoot, installBase, outputBase);
 
     packageLoader = PACKAGE_LOADER_FACTORY.create(workspaceRoot, installBase, outputBase);
   }

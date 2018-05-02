@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"context"
+
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/compat"
 	"github.com/google/go-cmp/cmp"
@@ -59,11 +60,11 @@ func TestMain(m *testing.M) {
 func TestLoad(t *testing.T) {
 	type Attrs = map[string]interface{}
 
-	workspaceRoot, err := createWorkspace()
+	workspaceRoot, installBase, outputBase, err := createWorkspace()
 	if err != nil {
 		t.Fatal(err)
 	}
-	loader := NewLoader(pkgLoaderClient, *rpcTimeout, workspaceRoot, "/", "/", nil)
+	loader := NewLoader(pkgLoaderClient, *rpcTimeout, workspaceRoot, installBase, outputBase, nil)
 
 	// Run tests
 	var tests = []struct {
@@ -341,24 +342,6 @@ func TestDialAddr(t *testing.T) {
 			t.Errorf("dialAddr(%s) = (%v, %v, %v), want (%v, %v, %v)", tt.bindLocation, addr, bind, typ, tt.wantAddr, tt.wantBindParam, tt.wantType)
 		}
 	}
-}
-
-func createWorkspace() (string, error) {
-	tmpRoot, err := ioutil.TempDir("", "jadep")
-	if err != nil {
-		return "", fmt.Errorf("error called ioutil.TempDir: %v", err)
-	}
-	workspaceRoot := filepath.Join(tmpRoot, "google3")
-	if err := os.MkdirAll(filepath.Join(workspaceRoot, "tools/build_rules"), 0700); err != nil {
-		return "", fmt.Errorf("error called MkdirAll: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workspaceRoot, "tools/build_rules/BUILD"), nil, 0666); err != nil {
-		return "", fmt.Errorf("error called WriteFile: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workspaceRoot, "tools/build_rules/prelude_-redacted-"), []byte("# must be non-empty"), 0666); err != nil {
-		return "", fmt.Errorf("error called WriteFile: %v", err)
-	}
-	return workspaceRoot, nil
 }
 
 type buildFile struct {
