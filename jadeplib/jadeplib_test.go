@@ -422,16 +422,7 @@ func createWorkspace(t *testing.T) string {
 	if err != nil {
 		t.Fatalf("Error called ioutil.TempDir: %v", err)
 	}
-	workDir := filepath.Join(root, "google3")
-	if err := os.MkdirAll(filepath.Join(workDir, "tools/build_rules"), 0700); err != nil {
-		t.Errorf("Error called MkdirAll: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workDir, "tools/build_rules/BUILD"), nil, 0666); err != nil {
-		t.Errorf("Error called WriteFile: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(workDir, "tools/build_rules/prelude_-redacted-"), []byte("# must be non-empty"), 0666); err != nil {
-		t.Errorf("Error called WriteFile: %v", err)
-	}
+	workDir := filepath.Join(root, "workspace")
 	return workDir
 }
 
