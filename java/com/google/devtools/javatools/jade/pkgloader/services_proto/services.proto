@@ -16,7 +16,7 @@ syntax = "proto2";
 
 package java.com.google.devtools.javatools.jade.pkgloader.services;
 
-// Get the same class names in -redacted- and Bazel.
+// Get the same class names internally and in Bazel.
 option java_package = "com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services";
 
 import "java/com/google/devtools/javatools/jade/pkgloader/messages_proto/messages.proto";
@@ -29,13 +29,13 @@ message LoaderRequest {
   // install_base is the path to the Bazel's install dir. It can be obtained by
   // `bazel info install_base`.
   // This field is necessary when loading Bazel workspaces.
-  // On -redacted- workspaces, set it to "/" (or leave it unset to use the default).
+  // On non-Bazel workspaces, set it to "/" (or leave it unset to use the default).
   optional string install_base = 4 [default = "/"];
 
   // install_base is the path to the Bazel's output dir. It can be obtained by
   // `bazel info output_base`.
   // This field is necessary when loading Bazel workspaces.
-  // On -redacted- workspaces, set it to "/" (or leave it unset to use the default).
+  // On non-Bazel workspaces, set it to "/" (or leave it unset to use the default).
   optional string output_base = 5 [default = "/"];
 
   // E.g., "java/com/Foo".

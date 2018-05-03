@@ -16,7 +16,7 @@ syntax = "proto2";
 
 package java.com.google.devtools.javatools.jade.pkgloader.messages;
 
-// Get the same class names in -redacted- and Bazel.
+// Get the same class names internally and in Bazel.
 option java_package = "com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.messages";
 
 message Pkg {
