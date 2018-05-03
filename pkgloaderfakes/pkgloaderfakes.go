@@ -36,13 +36,13 @@ func Pkg(rules []*bazel.Rule) *bazel.Package {
 }
 
 // JavaLibrary creates a java_library Bazel rule as if it were returned by pkgloaderclient.Loader.
-// TODO: Replace this with a version that calls Rule() directly.
+// TODO(bazel-team): Replace this with a version that calls Rule() directly.
 func JavaLibrary(pkgName string, name string, srcs []string, deps []string, exports []string) *bazel.Rule {
 	return rule("java_library", pkgName, name, srcs, deps, exports)
 }
 
 // JavaBinary creates a java_binary Bazel rule as if it were returned by pkgloaderclient.Loader.
-// TODO: Replace this with a version that calls Rule() directly.
+// TODO(bazel-team): Replace this with a version that calls Rule() directly.
 func JavaBinary(pkgName string, name string, srcs []string, deps []string, exports []string) *bazel.Rule {
 	return rule("java_binary", pkgName, name, srcs, deps, exports)
 }

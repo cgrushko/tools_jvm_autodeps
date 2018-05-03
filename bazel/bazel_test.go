@@ -99,7 +99,7 @@ func TestParseAbsoluteLabel(t *testing.T) {
 		{"//foo:foo", "", "//foo:foo"},
 		{"//foo/bar:foo", "", "//foo/bar:foo"},
 		{"@r//foo/bar:foo", "", "@r//foo/bar:foo"},
-		// TODO: Remove once fixed.
+		// TODO(b/36533053): Remove once fixed.
 		{"////foo/bar:foo", "", "//foo/bar:foo"},
 	}
 	for _, tt := range tests {

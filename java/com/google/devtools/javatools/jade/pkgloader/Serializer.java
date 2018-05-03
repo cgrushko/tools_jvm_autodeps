@@ -204,7 +204,7 @@ public class Serializer {
 
   private static String serializeLabel(
       PackageIdentifier containingPackage, String attrName, Label label) {
-    // TODO: remove this once Jadep handles relative visibility labels.
+    // TODO(bazel-team): remove this once Jadep handles relative visibility labels.
     if (attrName.equals("visibility")) {
       return label.getCanonicalForm();
     }

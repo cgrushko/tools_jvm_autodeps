@@ -249,7 +249,7 @@ func TestClasses(t *testing.T) {
 		    		import static foo.camelCase.Bar.*;`,
 			want: []string{"foo.bla", "foo.baz.Baz", "foo.camelCase.Bar"},
 		},
-		// TODO: Enable test.
+		// TODO(b/70230696): Enable test.
 		//     It's not the end of the world right now because parameters usually don't conform to the class name style so we don't report them.
 		// {
 		// 	desc: "Don't report formal parameters",

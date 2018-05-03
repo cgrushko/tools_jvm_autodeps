@@ -399,7 +399,7 @@ func TestResolve(t *testing.T) {
 				"«&2a»": "«2»",
 				"«&2b»": "«2»",
 				"«&2c»": "«2»",
-				// TODO: Enable once bug is fixed.
+				// TODO(b/69930543): Enable once bug is fixed.
 				// "«&3»":  "«3»",
 			},
 		},

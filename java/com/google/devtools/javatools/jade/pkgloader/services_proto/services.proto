@@ -62,8 +62,8 @@ message LoaderResponse {
 service PackageLoader {
   // `pkgloader` allows clients to load Bazel packages without calling Bazel.
   rpc Load(LoaderRequest) returns (LoaderResponse) {
-    
-    
+    // option security_level = PRIVACY_AND_INTEGRITY;
+    // option deadline = 10.0;
   }
 }
 

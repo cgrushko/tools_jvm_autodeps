@@ -161,7 +161,7 @@ public class GrpcLocalServer {
 
   private ServerBuilder<?> bindUDS(String bind, OperatingSystem os) throws Exception {
     // Try to eagerly initialize these classes.
-    // TODO: Remove once fix is available.
+    // TODO(b/69702522): Remove once fix is available.
     try {
       Class.forName(NetUtil.class.getName());
       Class.forName(MacAddressUtil.class.getName());
