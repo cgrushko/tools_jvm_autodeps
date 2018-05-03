@@ -16,8 +16,6 @@
 package main
 
 import (
-	"context"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -25,6 +23,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"flag"
+	"context"
 
 	"github.com/bazelbuild/tools_jvm_autodeps/bazeldepsresolver"
 	"github.com/bazelbuild/tools_jvm_autodeps/cli"

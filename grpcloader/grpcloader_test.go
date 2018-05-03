@@ -15,7 +15,6 @@
 package grpcloader
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -25,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"flag"
 	"context"
 
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
@@ -44,7 +44,9 @@ var (
 var pkgLoaderClient sgrpc.PackageLoaderClient
 
 func TestMain(m *testing.M) {
-	flag.Parse()
+	if !flag.Parsed() {
+		flag.Parse()
+	}
 	bindLocation := "unix://" + tempFileName("grpc_binding_location")
 	executable := compat.RunfilesPath(*pkgLoaderExecutable)
 	conn, process, err := dialAndStart(context.Background(), executable, bindLocation, 30*time.Second)

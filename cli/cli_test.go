@@ -15,12 +15,13 @@
 package cli
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"context"
 
 	"github.com/bazelbuild/tools_jvm_autodeps/bazel"
 	"github.com/bazelbuild/tools_jvm_autodeps/jadeplib"
