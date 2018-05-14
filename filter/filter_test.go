@@ -53,6 +53,11 @@ func TestIsValidDependency(t *testing.T) {
 			&bazel.Rule{"java_library", "x", Attrs{"tags": []string{"avoid_dep"}}},
 			false,
 		},
+		{
+			"don't allow deprecated rules",
+			&bazel.Rule{"java_library", "x", Attrs{"deprecation": "don't use this rule!"}},
+			false,
+		},
 	}
 
 	for _, tt := range tests {

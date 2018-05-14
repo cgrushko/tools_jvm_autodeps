@@ -94,6 +94,11 @@ func IsValidDependency(dep *bazel.Rule) bool {
 		}
 	}
 
+	_, ok := dep.Attrs["deprecation"].(string)
+	if ok {
+		return false
+	}
+
 	return true
 }
 
