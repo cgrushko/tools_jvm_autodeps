@@ -36,9 +36,9 @@ func Ref(rule *bazel.Rule) (string, error) {
 		// Not a macro
 		return string(rule.Label()), nil
 	}
-	name := rule.StrAttr("generator_name", "")
-	if name == "" {
-		loc := rule.StrAttr("generator_location", "")
+	name, ok := rule.Attrs["generator_name"].(string)
+	if !ok {
+		loc, _ := rule.Attrs["generator_location"].(string)
 		parts := strings.Split(loc, ":")
 		if len(parts) != 2 {
 			return "", fmt.Errorf("expected rule's generator_location (%q) to have exactly one colon", loc)

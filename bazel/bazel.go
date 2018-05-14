@@ -182,17 +182,6 @@ func (r *Rule) IntAttr(attrName string, defaultValue int) int {
 	return val
 }
 
-// StrAttr converts the attributes of a rule from
-// an interface type to a string.
-// If the attribute value is not a string, StrAttr returns defaultValue.
-func (r *Rule) StrAttr(attrName string, defaultValue string) string {
-	val, ok := r.Attrs[attrName].(string)
-	if !ok {
-		return defaultValue
-	}
-	return val
-}
-
 // LabelAttr converts the attributes of a rule from
 // an interface type to a string.
 // If the attribute value is not a label, LabelAttr returns an error.
