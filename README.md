@@ -13,17 +13,19 @@ Jadep is not an official Google product.
 
 **Contents**
 
--   [Java Automatic Dependencies (Jadep)](#java-automatic-dependencies-jadep)
-    -   [Usage](#usage)
-    -   [Building / Installation](#building-installation)
-    -   [How does it Work?](#how-does-it-work)
-        -   [Extracting Class Names](#extracting-class-names)
-        -   [Resolver: File System](#resolver-file-system)
-        -   [Resolver: JDK / Android SDK](#resolver-jdk-android-sdk)
-        -   [Reading ("Loading") `BUILD` files](#reading-loading-build-files)
-    -   [Extending / Hacking / Future Ideas](#extending-hacking-future-ideas)
-    -   [Bugs](#bugs)
-    -   [Contributing](#contributing)
+- [Java Automatic Dependencies (Jadep)](#java-automatic-dependencies-jadep)
+    - [Usage](#usage)
+    - [Detailed Example: Migrating a Java project to Bazel](#detailed-example--migrating-a-java-project-to-bazel)
+    - [Building / Installation](#building---installation)
+    - [How does it Work?](#how-does-it-work)
+        - [Detailed Flow](#detailed-flow)
+        - [Extracting Class Names](#extracting-class-names)
+        - [Resolver: File System](#resolver--file-system)
+        - [Resolver: JDK / Android SDK](#resolver--jdk---android-sdk)
+        - [Reading `BUILD` files](#reading-build-files)
+    - [Extending / Hacking / Future Ideas](#extending---hacking---future-ideas)
+    - [Bugs](#bugs)
+    - [Contributing](#contributing)
 
 ## Usage
 
@@ -73,6 +75,43 @@ Once a set of possible `BUILD` rules is found, it is filtered down according to
 `visibility`, `tags` and so on.
 
 The following subsections detail different parts of Jadep.
+
+### Detailed Flow
+
+1.  Connect to the PackageLoader server
+    ([GrpcLocalServer](https://github.com/bazelbuild/tools_jvm_autodeps/tree/master/java/com/google/devtools/javatools/jade/pkgloader))
+
+2.  Jadep parses Java files to learn which fully-qualified names (FQNs) are
+    referenced. This requires knowing which classes are defined in the same file
+    (e.g., another inner class or a template type name) which is done by
+    computing "jump-to-definition" information and then discarding all class
+    names not defined in the same file.
+
+    Implemented in
+    <https://github.com/bazelbuild/tools_jvm_autodeps/blob/master/lang/java/parser/parser.go>
+
+3.  The FQNs are passed to a sequence of "resolvers". A "resolver" returns BUILD
+    rule candidates that can be used to satisfy a dependency on an FQN. Once a
+    resolver returns a candidate for an FQN (i.e., it resolves it), the FQN is
+    not passed on to additional resolvers. This is done to (a) improve
+    performance and (b) allow ordering resolvers by accuracy to improve its
+    quality.
+
+    The resolver interface is defined in
+    <https://github.com/bazelbuild/tools_jvm_autodeps/blob/2d9ab49baf4b1866abe0b4d670dd356ada30fbb4/jadeplib/jadeplib.go#L51>
+
+    More details in the Resolver sections, below.
+
+4.  Candidates are filtered by visibility, tags, etc. Visibility sometimes
+    requires interpreting multiple BUILD files, and care was taken to interpret
+    as many as possible in parallel.
+
+    Code:
+    <https://github.com/bazelbuild/tools_jvm_autodeps/blob/master/filter/filter.go>
+
+5.  Finally, Jadep asks the user which rule to add.
+
+![Flow Diagram](flow-sequence.svg)
 
 ### Extracting Class Names
 
