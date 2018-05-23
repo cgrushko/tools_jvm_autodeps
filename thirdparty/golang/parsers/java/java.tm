@@ -375,7 +375,7 @@ ClassType<NoModifiers, NoName> -> ClassType :
     [!NoName] (QualifiedName -> TypeName)  -> ClassType
   | (QualifiedName -> TypeName) TypeArguments
   | ClassRefNoName TypeArguments?
-  | [!NoModifiers] Modifiers (ClassRefNoName | QualifiedName -> TypeName) TypeArguments?
+  | [!NoModifiers] (Modifiers -> ClassTypeMods) (ClassRefNoName | QualifiedName -> TypeName) TypeArguments?
 ;
 
 # This is ClassType + '>', expanded to cover >> and >>>.
@@ -409,10 +409,10 @@ TypeParameter -> TypeParameter :
     Annotations? IdentifierName TypeBound? ;
 
 TypeBound -> TypeBound :
-    'extends' ClassType AdditionalBound+? ;
+    'extends' types+=ClassType AdditionalBound+? ;
 
 AdditionalBound :
-    '&' ClassType ;
+    '&' types+=ClassType ;
 
 # This also covers the diamond operator.
 TypeArguments -> TypeArguments :
@@ -623,7 +623,7 @@ MethodDeclaration<WithDefault> -> Method :
     Modifiers? MethodHeader MethodBody ;
 
 MethodHeader :
-    (TypeParameters Annotations?)? Type<+NoModifiers> MethodDeclarator Throws? ;
+    (TypeParameters Annotations? -> MethodGenericClause)? Type<+NoModifiers> MethodDeclarator Throws? ;
 
 MethodDeclarator :
     IdentifierName FormalParameters Dims? ;
@@ -641,7 +641,7 @@ FormalParameterList :
 # TODO: Replace (ClassType|PrimitiveType) Dims? with Type
 Parameter -> Parameter :
     Modifiers? (ClassType<+NoModifiers> | PrimitiveType<+NoModifiers>)
-        Dims? (Annotations? '...')? VariableDeclaratorId   -> FormalParameter
+        Dims? (Annotations? '...' -> Variadic)? VariableDeclaratorId   -> FormalParameter
   | Modifiers? (ClassType<+NoModifiers> | PrimitiveType<+NoModifiers>)
         Dims? (Identifier '.')? ('this' -> IdentifierName) -> ReceiverParameter
 ;
@@ -674,10 +674,10 @@ ConstructorBody -> Block :
 %interface ConstructorInvocation;
 
 ExplicitConstructorInvocation -> ConstructorInvocation :
-    TypeArguments? 'this' '(' ArgumentList? ')' ';'                       -> ThisCall
-  | TypeArguments? 'super' '(' ArgumentList? ')' ';'                      -> SuperCall
-  | (QualifiedName -> ExprName) '.' TypeArguments? 'super' '(' ArgumentList? ')' ';'    -> SuperCall
-  | Primary '.' TypeArguments? 'super' '(' ArgumentList? ')' ';'          -> SuperCall
+    TypeArguments? 'this' Arguments ';'                       -> ThisCall
+  | TypeArguments? 'super' Arguments ';'                      -> SuperCall
+  | (QualifiedName -> ExprName) '.' TypeArguments? 'super' Arguments ';'    -> SuperCall
+  | Primary '.' TypeArguments? 'super' Arguments ';'          -> SuperCall
 ;
 
 EnumDeclaration<WithDefault> -> Enum :
@@ -693,7 +693,7 @@ EnumConstantList :
 ;
 
 EnumConstant -> EnumConstant :
-    Modifiers? IdentifierName ('(' ArgumentList? ')')? ClassBody? ;
+    Modifiers? IdentifierName Arguments? ClassBody? ;
 
 EnumBodyDeclarations :
     ';' ClassBodyDeclaration* ;
@@ -930,7 +930,7 @@ BasicForStatementNoShortIf -> BasicFor :
 
 ForInit -> ForInit :
     StatementExpressionList
-  | LocalVariableDeclaration
+  | (LocalVariableDeclaration -> LocalVars)
 ;
 
 ForUpdate -> ForUpdate :
@@ -941,11 +941,15 @@ StatementExpressionList :
   | StatementExpressionList ',' StatementExpression
 ;
 
+EnhancedForVar -> LocalVars :
+  Modifiers? Type<+NoModifiers> (VariableDeclaratorId -> VarDecl) ;
+
+
 EnhancedForStatement -> EnhFor :
-    'for' '(' Modifiers? Type<+NoModifiers> VariableDeclaratorId ':' Expression ')' Statement ;
+    'for' '(' var=EnhancedForVar ':' Expression ')' stmt=Statement ;
 
 EnhancedForStatementNoShortIf -> EnhFor :
-    'for' '(' Modifiers? Type<+NoModifiers> VariableDeclaratorId ':' Expression ')' StatementNoShortIf ;
+    'for' '(' var=EnhancedForVar ':' Expression ')' stmt=StatementNoShortIf ;
 
 BreakStatement -> Break :
     'break' Identifier? ';' ;
@@ -1000,7 +1004,7 @@ Resource -> Resource :
   | VariableAccess
 ;
 
-VariableAccess:
+VariableAccess -> Expression:
     QualifiedName    -> ExprName
   | FieldAccess
 ;
@@ -1039,7 +1043,7 @@ ClassInstanceCreationExpression -> Expression :
 ;
 
 UnqualifiedClassInstanceCreationExpression -> New :
-    'new' TypeArguments? ClassType '(' ArgumentList? ')' ClassBody?
+    'new' TypeArguments? ClassType Arguments ClassBody?
 ;
 
 SuperRef -> SuperRef :
@@ -1053,16 +1057,19 @@ FieldAccess -> FieldAccess :
 ;
 
 ArrayAccess -> ArrayAccess :
-    (QualifiedName -> ExprName) '[' Expression ']'
-  | PrimaryNoNewArray '[' Expression ']'
+    expr=(QualifiedName -> ExprName) '[' index=Expression ']'
+  | expr=PrimaryNoNewArray '[' index=Expression ']'
 ;
 
 MethodInvocation -> MethodInvocation :
-    MethodName '(' ArgumentList? ')'
-  | (QualifiedName -> TypeOrExprName) '.' TypeArguments? MethodName '(' ArgumentList? ')'
-  | Primary '.' TypeArguments? MethodName '(' ArgumentList? ')'
-  | SuperRef '.' TypeArguments? MethodName '(' ArgumentList? ')'
+    MethodName Arguments
+  | (QualifiedName -> TypeOrExprName) '.' TypeArguments? MethodName Arguments
+  | Primary '.' TypeArguments? MethodName Arguments
+  | SuperRef '.' TypeArguments? MethodName Arguments
 ;
+
+Arguments -> Args:
+    '(' (Expression separator ',')+? ')' ;
 
 ArgumentList :
     Expression
@@ -1113,7 +1120,7 @@ Expression -> Expression :
     LambdaOrMethodReference
   | ConditionalExpression
   | Assignment
-  | '(' (?= CastStartLookahead & !LambdaStartLookahead) ReferenceType AdditionalBound+? ')'
+  | '(' (?= CastStartLookahead & !LambdaStartLookahead) types+=ReferenceType AdditionalBound+? ')'
       LambdaOrMethodReference   -> CastExpression
 ;
 
@@ -1131,9 +1138,9 @@ LambdaExpression -> Lambda :
     LambdaParameters '->' LambdaBody ;
 
 LambdaParameters -> LambdaParameters :
-    (Identifier -> IdentifierName)
+    names+=(Identifier -> IdentifierName)
   | '(' (?= LambdaStartLookahead) FormalParameterList? ')'
-  | '(' (?= LambdaStartLookahead) IdentifierName (',' IdentifierName)+? ')'
+  | '(' (?= LambdaStartLookahead) names+=IdentifierName (',' names+=IdentifierName)+? ')'
 ;
 
 LambdaBody :
@@ -1142,9 +1149,9 @@ LambdaBody :
 ;
 
 Assignment -> Expression :
-    LeftHandSide AssignmentOp Expression -> Assignment ;
+    left=LeftHandSide op=AssignmentOp right=Expression -> Assignment ;
 
-LeftHandSide :
+LeftHandSide -> Expression :
     QualifiedName    -> ExprName
   | FieldAccess
   | ArrayAccess
@@ -1194,7 +1201,7 @@ LogicalExpression -> Expression :
 RelationalExpression -> Expression :
     ArithmeticExpression
   | left=ArithmeticExpressionNoName '<' right=ArithmeticExpression    -> Relational
-  | (left=QualifiedName -> ExprName) (?= !MethodReferenceLookahead) '<' right=ArithmeticExpression  -> Relational
+  | left=(QualifiedName -> ExprName) (?= !MethodReferenceLookahead) '<' right=ArithmeticExpression  -> Relational
   | left=ArithmeticExpression '>' right=ArithmeticExpression          -> Relational
   | left=ArithmeticExpression '<=' right=ArithmeticExpression         -> Relational
   | left=ArithmeticExpression '>=' right=ArithmeticExpression         -> Relational
@@ -1281,9 +1288,9 @@ AfterReferenceTypeCast :
 ;
 
 CastExpression :
-    '(' (?= CastStartLookahead & !LambdaStartLookahead) PrimitiveType ')' UnaryExpression -> CastExpression
-  | '(' (?= CastStartLookahead & !LambdaStartLookahead) ReferenceType AdditionalBound+? ')' UnaryExpressionNotPlusMinusNoName -> CastExpression
-  | ('(' (?= CastStartLookahead & !LambdaStartLookahead) ReferenceType AdditionalBound+? ')' (QualifiedName -> ExprName) -> CastExpression) (?= !MethodReferenceLookahead)
+    '(' (?= CastStartLookahead & !LambdaStartLookahead) types+=PrimitiveType ')' UnaryExpression -> CastExpression
+  | '(' (?= CastStartLookahead & !LambdaStartLookahead) types+=ReferenceType AdditionalBound+? ')' UnaryExpressionNotPlusMinusNoName -> CastExpression
+  | ('(' (?= CastStartLookahead & !LambdaStartLookahead) types+=ReferenceType AdditionalBound+? ')' (QualifiedName -> ExprName) -> CastExpression) (?= !MethodReferenceLookahead)
 ;
 
 %%
