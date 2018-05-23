@@ -63,14 +63,17 @@ func walk(n ast.Node, before func(ast.Node) int, after func(ast.Node, int)) {
 func buildSymbolTables(t *ast.Tree) map[ast.Node]*SymbolTable {
 	result := make(map[ast.Node]*SymbolTable)
 
-	// stOfGrandparent returns the SymbolTable for the grand parent of 'n', or the tree root if there
-	// isn't one.
-	// All containers (e.g., JavaClass) have a JavaBody which contains members and inner types, so a
+	// stOfContainer returns the SymbolTable for the container node (e.g., Javaclass) containing 'n',
+	// or the tree root if there isn't one.
+	// Most containers (e.g., JavaClass) have a JavaBody which contains members and inner types, so a
 	// grandparent is the container of a member / inner type.
-	stOfGrandparent := func(n ast.Node) *SymbolTable {
+	stOfContainer := func(n ast.Node) *SymbolTable {
 		container := n.Parent()
 		if p := container.Parent(); p.IsValid() {
 			container = p
+		}
+		if container.Type() == node.JavaMethodGenericClause {
+			container = container.Parent()
 		}
 		if !isContainer(container.Type()) {
 			panic(fmt.Sprintf("isContainer(%v) = false, but we expected true. It should be updated to return true in this case. Debug: n == %v", container.Type(), n))
@@ -86,11 +89,11 @@ func buildSymbolTables(t *ast.Tree) map[ast.Node]*SymbolTable {
 	before := func(n ast.Node) int {
 		switch n.Type() {
 		case node.JavaMethod, node.JavaEnumConstant:
-			st := stOfGrandparent(n)
+			st := stOfContainer(n)
 			st.addMember(n)
 
 		case node.JavaField:
-			st := stOfGrandparent(n)
+			st := stOfContainer(n)
 			for child := n.FirstChild(); child.IsValid(); child = child.NextSibling() {
 				if child.Type() == node.JavaVarDecl {
 					st.addMember(child)
@@ -98,7 +101,7 @@ func buildSymbolTables(t *ast.Tree) map[ast.Node]*SymbolTable {
 			}
 
 		case node.JavaClass, node.JavaEnum, node.JavaInterface, node.JavaTypeParameter, node.JavaAnnotationType:
-			st := stOfGrandparent(n)
+			st := stOfContainer(n)
 			st.addType(n)
 
 		case node.JavaImport:
@@ -111,7 +114,7 @@ func buildSymbolTables(t *ast.Tree) map[ast.Node]*SymbolTable {
 			if !lastID.IsValid() {
 				break
 			}
-			st := stOfGrandparent(n)
+			st := stOfContainer(n)
 			name := lastID.Text()
 			if static {
 				st.Members[name] = append(st.Members[name], n)

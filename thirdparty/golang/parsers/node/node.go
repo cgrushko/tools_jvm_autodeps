@@ -67,25 +67,27 @@ const (
 	JavaAnnotationType        Type = 77 // public @interface Test { .. }
 	JavaAnnotationTypeElement Type = 78 //    public boolean enabled() default true;
 
-	JavaExtends               Type = 79 // class A |extends B| {}
-	JavaImplements            Type = 80 // class D |implements E| {}
-	JavaBody                  Type = 81 // class A |{}|
-	JavaField                 Type = 82 // private int i = 1;
-	JavaVarDecl               Type = 83 //             i = 1
-	JavaMethod                Type = 84 // public static void main(String[] args) {}
-	JavaFormalParameters      Type = 85 //                        (String[] args)
-	JavaFormalParameter       Type = 86 //                         String[] args
-	JavaReceiverParameter     Type = 87 // void m2(|@MyAnnotation Test this|) { }
-	JavaThrows                Type = 88 // int a() |throws IOException| {}
-	JavaNoBody                Type = 89 // class A { abstract int a()|;| }
-	JavaEnumConstant          Type = 90 // enum I { |PUBLIC("public") { ... }| ... }
-	JavaInstanceInitializer   Type = 91 // class A { |{}| }
-	JavaStaticInitializer     Type = 92 // class A { |static {}| }
-	JavaConstructor           Type = 93 // class A { |A() {}| }
-	JavaIdentifierName        Type = 94 // class |A| {}
-	JavaDefaultValue          Type = 95 // public boolean enabled() |default true|;
-	JavaInitializerExpression Type = 96 // int i = |5+2|;
-	JavaArrayInitializer      Type = 97 // byte[] bytes = |{1,2,3}|;
+	JavaExtends               Type = 79  // class A |extends B| {}
+	JavaImplements            Type = 80  // class D |implements E| {}
+	JavaBody                  Type = 81  // class A |{}|
+	JavaField                 Type = 82  // private int i = 1;
+	JavaVarDecl               Type = 83  //             i = 1
+	JavaMethod                Type = 84  // public static void main(String[] args) {}
+	JavaFormalParameters      Type = 85  //                        (String[] args)
+	JavaFormalParameter       Type = 86  //                         String[] args
+	JavaMethodGenericClause   Type = 189 // public |<T> @X| T[] getTs();
+	JavaVariadic              Type = 190 // void foo(String |@bar ...|rest)
+	JavaReceiverParameter     Type = 87  // void m2(|@MyAnnotation Test this|) { }
+	JavaThrows                Type = 88  // int a() |throws IOException| {}
+	JavaNoBody                Type = 89  // class A { abstract int a()|;| }
+	JavaEnumConstant          Type = 90  // enum I { |PUBLIC("public") { ... }| ... }
+	JavaInstanceInitializer   Type = 91  // class A { |{}| }
+	JavaStaticInitializer     Type = 92  // class A { |static {}| }
+	JavaConstructor           Type = 93  // class A { |A() {}| }
+	JavaIdentifierName        Type = 94  // class |A| {}
+	JavaDefaultValue          Type = 95  // public boolean enabled() |default true|;
+	JavaInitializerExpression Type = 96  // int i = |5+2|;
+	JavaArrayInitializer      Type = 97  // byte[] bytes = |{1,2,3}|;
 
 	JavaModifierKeyword  Type = 98  // public, final, @Nullable
 	JavaAnnotation       Type = 99  // @Nullable
@@ -96,6 +98,7 @@ const (
 	JavaVoidType       Type = 103 // void
 	JavaPrimitiveType  Type = 104 // int, long, boolean
 	JavaClassType      Type = 105 // A, java.util.List<Integer>
+	JavaClassTypeMods  Type = 188 // extends |@Bar| Foo {}
 	JavaArrayType      Type = 106 // A[], int[]
 	JavaTypeParameters Type = 107 // class A<|T extends A & B|> {}
 	JavaTypeParameter  Type = 108 //          T extends A & B
@@ -133,10 +136,11 @@ const (
 	JavaResourceSpecification Type = 139 // try |(InputStream inputStream = getStream(); )| { }
 	JavaResource              Type = 140 //       InputStream inputStream = getStream()
 
-	JavaMethodName       Type = 141
+	JavaMethodName       Type = 141 // this.|aa|(foo, bar)
+	JavaArgs             Type = 187 //         |(foo, bar)|
 	JavaThisCall         Type = 142
 	JavaSuperCall        Type = 143
-	JavaThis             Type = 144
+	JavaThis             Type = 144 // this
 	JavaParenthesized    Type = 145
 	JavaClassLiteral     Type = 146
 	JavaQualifiedNew     Type = 147
@@ -182,7 +186,7 @@ const (
 	JavaPackageName       Type = 185
 	JavaModuleDirective   Type = 186
 
-	JavaNodeMax Type = 187
+	JavaNodeMax Type = 191
 )
 
 // Property is a bitmask of node properties.
