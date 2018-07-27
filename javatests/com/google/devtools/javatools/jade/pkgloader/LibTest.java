@@ -17,6 +17,7 @@ package com.google.devtools.javatools.jade.pkgloader;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.google.devtools.build.lib.vfs.DigestHashFunction;
 import com.google.devtools.build.lib.vfs.FileSystem;
 import com.google.devtools.build.lib.vfs.FileSystemUtils;
 import com.google.devtools.build.lib.vfs.Path;
@@ -34,7 +35,7 @@ public class LibTest {
   private static final PackageLoaderFactory PACKAGE_LOADER_FACTORY =
       new BazelPackageLoaderFactory();
 
-  private static final FileSystem FILESYSTEM = new InMemoryFileSystem();
+  private static final FileSystem FILESYSTEM = new InMemoryFileSystem(DigestHashFunction.MD5);
   private Path workspaceRoot;
   private Path installBase;
   private Path outputBase;

@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.devtools.build.lib.cmdline.PackageIdentifier;
 import com.google.devtools.build.lib.packages.Package;
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
+import com.google.devtools.build.lib.vfs.DigestHashFunction;
 import com.google.devtools.build.lib.vfs.FileSystem;
 import com.google.devtools.build.lib.vfs.FileSystemUtils;
 import com.google.devtools.build.lib.vfs.Path;
@@ -45,7 +46,7 @@ public class SerializerTest {
 
   @Before
   public void setUp() throws IOException {
-    FileSystem fs = new InMemoryFileSystem();
+    FileSystem fs = new InMemoryFileSystem(DigestHashFunction.MD5);
     workspaceRoot = fs.getPath("/workspace/");
     Path installBase = fs.getPath("/install_base/");
     Path outputBase = fs.getPath("/output_base/");
