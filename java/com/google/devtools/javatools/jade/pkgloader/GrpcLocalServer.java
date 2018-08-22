@@ -16,6 +16,7 @@ package com.google.devtools.javatools.jade.pkgloader;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.devtools.build.lib.vfs.JavaIoFileSystem;
+import com.google.devtools.build.lib.vfs.DigestHashFunction;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.PackageLoaderGrpc.PackageLoaderImplBase;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.Empty;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderRequest;
@@ -59,7 +60,7 @@ public class GrpcLocalServer {
   private static final Logger logger = Logger.getLogger("GrpcLocalServer");
 
   private static final com.google.devtools.build.lib.vfs.FileSystem FILESYSTEM =
-      new JavaIoFileSystem();
+      new JavaIoFileSystem(DigestHashFunction.MD5);
 
   private static final String UNIX_DOMAIN_SOCKET_PREFIX = "unix://";
 
