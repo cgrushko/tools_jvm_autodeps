@@ -169,7 +169,7 @@ Since Jadep interacts with existing Bazel rules (e.g., when filtering by
 We use Bazel's [Skylark
 interpreter](https://github.com/bazelbuild/bazel/blob/0.10.0/src/main/java/com/google/devtools/build/lib/skyframe/packages/BazelPackageLoader.java) rather than [Buildozer](https://github.com/bazelbuild/buildtools/tree/c98ff0c6395f09b1942e6f7c42bf3ec15e3b9ca7/buildozer), because the latter is unable to interpret macros.
 
-Since the Skylark interpreter is wrriten in Java, a persistent local [gRPC](https://grpc.io/) server is
+Since the Skylark interpreter is written in Java, a persistent local [gRPC](https://grpc.io/) server is
 used to avoid repeatedly paying startup costs.
 
 ## Extending / Hacking / Future Ideas
