@@ -2,8 +2,8 @@
 
 http_archive(
     name = "io_bazel",
-    sha256 = "09c66b94356c82c52f212af52a81ac28eb06de1313755a2f23eeef84d167b36c",
-    urls = ["https://releases.bazel.build/0.16.1/release/bazel-0.16.1-dist.zip"],
+    sha256 = "23e4281c3628cbd746da3f51330109bbf69780bd64461b63b386efae37203f20",
+    urls = ["https://releases.bazel.build/0.17.1/release/bazel-0.17.1-dist.zip"],
 )
 
 # Buildozer, to manipulate BUILD files
