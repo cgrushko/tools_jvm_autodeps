@@ -26,6 +26,7 @@ import com.google.devtools.build.lib.vfs.DigestHashFunction;
 import com.google.devtools.build.lib.vfs.FileSystem;
 import com.google.devtools.build.lib.vfs.FileSystemUtils;
 import com.google.devtools.build.lib.vfs.Path;
+import com.google.devtools.build.lib.vfs.Root;
 import com.google.devtools.build.lib.vfs.inmemoryfs.InMemoryFileSystem;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.messages.Messages;
 import java.io.IOException;
@@ -52,7 +53,8 @@ public class SerializerTest {
     Path outputBase = fs.getPath("/output_base/");
     MockWorkspace.create(workspaceRoot, installBase, outputBase);
 
-    packageLoader = PACKAGE_LOADER_FACTORY.create(workspaceRoot, installBase, outputBase);
+    packageLoader =
+        PACKAGE_LOADER_FACTORY.create(Root.fromPath(workspaceRoot), installBase, outputBase);
   }
 
   @Test

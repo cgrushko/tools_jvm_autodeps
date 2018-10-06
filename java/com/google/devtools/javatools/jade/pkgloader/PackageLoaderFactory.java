@@ -16,7 +16,8 @@ package com.google.devtools.javatools.jade.pkgloader;
 
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
 import com.google.devtools.build.lib.vfs.Path;
+import com.google.devtools.build.lib.vfs.Root;
 
 public interface PackageLoaderFactory {
-  PackageLoader create(Path workspaceDir, Path installBase, Path outputBase);
+  PackageLoader create(Root workspaceDir, Path installBase, Path outputBase);
 }

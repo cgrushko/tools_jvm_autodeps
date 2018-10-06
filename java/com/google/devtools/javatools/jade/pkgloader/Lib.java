@@ -22,6 +22,7 @@ import com.google.devtools.build.lib.cmdline.PackageIdentifier;
 import com.google.devtools.build.lib.packages.NoSuchPackageException;
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
 import com.google.devtools.build.lib.vfs.FileSystem;
+import com.google.devtools.build.lib.vfs.Root;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderRequest;
 import com.google.protos.java.com.google.devtools.javatools.jade.pkgloader.services.Services.LoaderResponse;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class Lib {
     logger.info("Start of 'load'");
     PackageLoader loader =
         packageLoaderFactory.create(
-            fileSystem.getPath(request.getWorkspaceDir()),
+            Root.fromPath(fileSystem.getPath(request.getWorkspaceDir())),
             fileSystem.getPath(request.getInstallBase()),
             fileSystem.getPath(request.getOutputBase()));
 
