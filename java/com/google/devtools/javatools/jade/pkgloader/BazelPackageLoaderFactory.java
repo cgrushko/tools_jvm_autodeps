@@ -20,13 +20,14 @@ import com.google.devtools.build.lib.events.Reporter;
 import com.google.devtools.build.lib.skyframe.packages.BazelPackageLoader;
 import com.google.devtools.build.lib.skyframe.packages.PackageLoader;
 import com.google.devtools.build.lib.vfs.Path;
+import com.google.devtools.build.lib.vfs.Root;
 
 public class BazelPackageLoaderFactory implements PackageLoaderFactory {
   private static final Reporter REPORTER =
       new Reporter(new EventBus(), PrintingEventHandler.ERRORS_TO_STDERR);
 
   @Override
-  public PackageLoader create(Path workspaceDir, Path installBase, Path outputBase) {
+  public PackageLoader create(Root workspaceDir, Path installBase, Path outputBase) {
     return BazelPackageLoader.builder(workspaceDir, installBase, outputBase)
         .useDefaultSkylarkSemantics()
         .setReporter(REPORTER)
